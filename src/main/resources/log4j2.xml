@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+	<Appenders>
+		<Console name="STDOUT">
+			<PatternLayout pattern="%m%n" />
+		</Console>
+		<RollingFile name="RollingFile"
+			fileName="logs/browser.log" filePattern="logs/%d{yyyyMMdd}.log.gz">
+			<PatternLayout>
+				<Pattern>%d{HH:mm:ss,SSS} %p [%t] %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="logs/" maxDepth="1">
+					<IfFileName glob="*/*.log.gz" />
+					<IfAccumulatedFileCount exceeds="2" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>		
+		<Root level="debug">
+			<AppenderRef ref="STDOUT" />
+			<AppenderRef ref="RollingFile" />
+		</Root>
+	</Loggers>
+	
+</Configuration>
