@@ -10,7 +10,7 @@ import fr.jhamon.scpbrowser.utils.Constantes;
  * Copyright 2019 J.Hamon
  *
  */
-public class SessionConfigModel {
+public class SessionConfigModel implements Comparable<SessionConfigModel> {
 
   private String name;
 
@@ -283,5 +283,10 @@ public class SessionConfigModel {
    */
   public void setPassword(String password) {
     this.password = password;
+  }
+  
+  @Override
+  public int compareTo(SessionConfigModel o) {
+    return this.name==null ? -1 : this.name.compareTo(o.getName());
   }
 }
