@@ -242,6 +242,10 @@ public class SessionSelector extends JDialog {
         .setText(savedConfigModel.getUsername());
         SessionSelector.this.passwordField
         .setText(savedConfigModel.getPassword());
+        SessionSelector.this.timeoutCommandField.setText(String.valueOf(savedConfigModel.getCommandTimeout()));
+        SessionSelector.this.timeoutConnectField.setText(String.valueOf(savedConfigModel.getConnectTimeout()));
+        SessionSelector.this.timeoutDownloadField.setText(String.valueOf(savedConfigModel.getDownloadTimeout()));
+        SessionSelector.this.timeoutUploadLabel.setText(String.valueOf(savedConfigModel.getUploadTimeout()));
       }
     });
   }
@@ -290,7 +294,7 @@ public class SessionSelector extends JDialog {
     timeoutPanel.add(this.timeoutDownloadField);
     timeoutPanel.add(this.timeoutUploadLabel);
     timeoutPanel.add(this.timeoutUploadField);
-    SpringUtilities.makeCompactGrid(formPanel, 4, 2, 6, 6, 6, 6);
+    SpringUtilities.makeCompactGrid(timeoutPanel, 4, 2, 6, 6, 6, 6);
 
     newSessionPanel.add(formPanel);
     newSessionPanel.add(new JSeparator(JSeparator.HORIZONTAL));
@@ -382,5 +386,69 @@ public class SessionSelector extends JDialog {
       }
 
     });
+  }
+
+
+  /**
+   * @return the timeoutConnectField
+   */
+  public JTextField getTimeoutConnectField() {
+    return timeoutConnectField;
+  }
+
+
+  /**
+   * @param timeoutConnectField the timeoutConnectField to set
+   */
+  public void setTimeoutConnectField(JTextField timeoutConnectField) {
+    this.timeoutConnectField = timeoutConnectField;
+  }
+
+
+  /**
+   * @return the timeoutCommandField
+   */
+  public JTextField getTimeoutCommandField() {
+    return timeoutCommandField;
+  }
+
+
+  /**
+   * @param timeoutCommandField the timeoutCommandField to set
+   */
+  public void setTimeoutCommandField(JTextField timeoutCommandField) {
+    this.timeoutCommandField = timeoutCommandField;
+  }
+
+
+  /**
+   * @return the timeoutDownloadField
+   */
+  public JTextField getTimeoutDownloadField() {
+    return timeoutDownloadField;
+  }
+
+
+  /**
+   * @param timeoutDownloadField the timeoutDownloadField to set
+   */
+  public void setTimeoutDownloadField(JTextField timeoutDownloadField) {
+    this.timeoutDownloadField = timeoutDownloadField;
+  }
+
+
+  /**
+   * @return the timeoutUploadField
+   */
+  public JTextField getTimeoutUploadField() {
+    return timeoutUploadField;
+  }
+
+
+  /**
+   * @param timeoutUploadField the timeoutUploadField to set
+   */
+  public void setTimeoutUploadField(JTextField timeoutUploadField) {
+    this.timeoutUploadField = timeoutUploadField;
   }
 }
