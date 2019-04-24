@@ -71,6 +71,7 @@ public class ConfigUtils {
         System.out.println("invalid: " + strSession);
       }
     }
+    Collections.sort(sessionList);
     return sessionList;
   }
 
