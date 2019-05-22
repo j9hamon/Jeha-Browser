@@ -328,7 +328,7 @@ public class SessionPresenter implements ContentEventHandler {
         this.sessionModel.getConfiguration()));
     try {
       // send cd command
-      this.contentStreams.getLeft().write(("cd " + path + "\n").getBytes());
+      this.contentStreams.getLeft().write(("cd \"" + path + "\"\n").getBytes());
       this.contentStreams.getLeft().flush();
       // read command output
       String cmdOutput = SessionUtils.readUntil(this.contentStreams.getRight(),
