@@ -85,7 +85,7 @@ public class TransferCounter extends JPanel {
       @Override
       public void run() {
         TransferCounter.this.failureCounterLbl
-        .setText(String.valueOf(TransferCounter.this.failureCounter.get()));
+            .setText(String.valueOf(TransferCounter.this.failureCounter.get()));
       }
     });
   }
@@ -97,11 +97,11 @@ public class TransferCounter extends JPanel {
       @Override
       public void run() {
         TransferCounter.this.runningCounterLbl
-        .setText(String.valueOf(TransferCounter.this.runningCounter.get()));
+            .setText(String.valueOf(TransferCounter.this.runningCounter.get()));
         TransferCounter.this.runningCounterLbl
-        .setEnabled(TransferCounter.this.runningCounter.get() > 0);
+            .setEnabled(TransferCounter.this.runningCounter.get() > 0);
         TransferCounter.this.runningIcon
-        .setEnabled(TransferCounter.this.runningCounter.get() > 0);
+            .setEnabled(TransferCounter.this.runningCounter.get() > 0);
       }
     });
   }
@@ -118,11 +118,11 @@ public class TransferCounter extends JPanel {
       @Override
       public void run() {
         TransferCounter.this.runningCounterLbl
-        .setText(String.valueOf(TransferCounter.this.runningCounter.get()));
+            .setText(String.valueOf(TransferCounter.this.runningCounter.get()));
         TransferCounter.this.runningCounterLbl
-        .setEnabled(TransferCounter.this.runningCounter.get() > 0);
+            .setEnabled(TransferCounter.this.runningCounter.get() > 0);
         TransferCounter.this.runningIcon
-        .setEnabled(TransferCounter.this.runningCounter.get() > 0);
+            .setEnabled(TransferCounter.this.runningCounter.get() > 0);
       }
     });
   }
@@ -134,8 +134,9 @@ public class TransferCounter extends JPanel {
       @Override
       public void run() {
         TransferCounter.this.successCounterLbl
-        .setText(String.valueOf(TransferCounter.this.successCounter.get()));
+            .setText(String.valueOf(TransferCounter.this.successCounter.get()));
       }
     });
   }
+
 }
