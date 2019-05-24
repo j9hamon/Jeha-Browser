@@ -143,9 +143,9 @@ public class MainFrame extends JFrame implements MainView {
   }
 
   @Override
-  public SessionView createNewSessionView(String title) {
+  public SessionView createNewSessionView(String title, String tooltip) {
     SessionView newSessionView = new SessionPanel();
-    this.sessionTabsPane.add(title, (SessionPanel) newSessionView);
+    this.sessionTabsPane.addTab(title, null, (SessionPanel) newSessionView, tooltip);
     this.toolbar.toggleSessionButtons(true);
     this.sessionTree.refreshTree(ConfigUtils.getSessionConfigs());
     return newSessionView;

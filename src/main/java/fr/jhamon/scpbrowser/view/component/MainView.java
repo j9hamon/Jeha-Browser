@@ -20,7 +20,7 @@ public interface MainView {
    * @param title session view title
    * @return a session view
    */
-  SessionView createNewSessionView(String title);
+  SessionView createNewSessionView(String title, String tooltip);
 
   /**
    * remove a session view

@@ -32,14 +32,16 @@ public class SessionTreeRenderer extends DefaultTreeCellRenderer {
     if (value instanceof DefaultMutableTreeNode
         && ((DefaultMutableTreeNode) value)
         .getUserObject() instanceof SessionConfigModel) {
-      String text = ((SessionConfigModel) ((DefaultMutableTreeNode) value)
-          .getUserObject()).getName();
+      SessionConfigModel configModel = (SessionConfigModel) ((DefaultMutableTreeNode) value)
+          .getUserObject();
+      String text = configModel.getName();
       if (text.contains("/")) {
         text = text.substring(text.lastIndexOf("/")+1);
       }
       super.getTreeCellRendererComponent(tree, text, sel, expanded, leaf, row,
           hasFocus);
       setIcon(serverIcon);
+      setToolTipText(String.format("user: %s\n, host: %s", configModel.getUsername(), configModel.getServer()));
     } else {
       super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row,
           hasFocus);

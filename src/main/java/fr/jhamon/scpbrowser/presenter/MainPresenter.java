@@ -199,7 +199,8 @@ public class MainPresenter implements ManagementUserEventHandler {
       }
     }
     // create new view
-    SessionView newView = this.view.createNewSessionView(configModel.getName());
+    SessionView newView = this.view.createNewSessionView(configModel.getName(),
+        String.format("user: %s\n host: %s", configModel.getUsername(), configModel.getServer()));
     try {
       LoggerUtils.debug("Openning new session for " + configModel);
       // open ssh session
