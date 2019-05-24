@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -76,11 +77,20 @@ public class ConfigUtils {
   }
 
   /**
+   * @return the list of session configurations stored in the configuration file
+   */
+  public static void setSessionConfigs(List<SessionConfigModel> list) {
+    CONFIG_FILE.clearProperty("sessions.session");
+    CONFIG_FILE.addProperty("sessions.session", list.toArray());
+    saveConfig();
+  }
+
+  /**
    * Add a new session configuration in the configuration file
    *
    * @param model session configuration to save
    */
-  public static void saveSessionConfig(SessionConfigModel model) {
+  public static void addSessionConfig(SessionConfigModel model) {
     CONFIG_FILE.addProperty("sessions.session", model.toString());
     saveConfig();
   }
@@ -88,7 +98,7 @@ public class ConfigUtils {
   /**
    * Save the actual configuration to a file
    */
-  private static void saveConfig() {
+  public static void saveConfig() {
     try {
       CONFIG_FILE.write(new FileWriter("config.ini"));
     } catch (ConfigurationException e) {

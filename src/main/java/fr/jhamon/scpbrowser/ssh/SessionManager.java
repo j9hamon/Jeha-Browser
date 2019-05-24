@@ -1,5 +1,6 @@
 package fr.jhamon.scpbrowser.ssh;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -194,7 +195,7 @@ public class SessionManager {
    * @return
    * @throws SessionException if download fails
    */
-  public void downloadFile(SessionModel sessionModel, String filePath)
+  public void downloadFile(SessionModel sessionModel, String filePath, File destination)
       throws SessionException {
     Session session = sessionModel.getSshSession();
     if (session == null) {
@@ -206,11 +207,14 @@ public class SessionManager {
     }
 
     try {
+      if (destination!=null && destination.getParentFile() != null && !destination.getParentFile().exists()) {
+        destination.getParentFile().mkdirs();
+      }
       ChannelExec channel = (ChannelExec) session.openChannel("exec");
       channel.setAgentForwarding(true);
       channel.setPty(true);
-      channel.setCommand(SessionUtils
-          .buildScpDownloadCommand(sessionModel.getConfiguration(), filePath));
+      channel.setCommand(SessionUtils.buildScpDownloadCommand(sessionModel.getConfiguration(), filePath,
+          destination != null ? destination.getAbsolutePath() : ConfigUtils.getDownloadDirectory()));
 
       Pair<OutputStream, InputStream> streams = Pair
           .of(channel.getOutputStream(), channel.getInputStream());

@@ -1,6 +1,9 @@
 package fr.jhamon.scpbrowser.view.component.event.handler;
 
+import java.io.File;
+
 import fr.jhamon.scpbrowser.model.ContentModel;
+import fr.jhamon.scpbrowser.model.FileModel;
 
 /**
  * Handler interface to manage the user action related to content
@@ -17,13 +20,42 @@ public interface ContentEventHandler {
    * @param absolutePath file path to upload
    */
   void onUploadEvent(String absolutePath);
+  /**
+   * Handle download request
+   *
+   * @param fileToDownload file to download
+   * @param destinationFile destination
+   */
+  void onDownloadEvent(FileModel fileToDownload, File destinationFile);
 
   /**
-   * Handle content selection event
+   * Handle content selection navigation event
    *
-   * @param content content to download or to move to
+   * @param content content to move to
    */
-  public void onSelectedContent(ContentModel content);
+  public void onOpenSelectedContent(ContentModel content);
+
+  /**
+   * Handle content selection download event
+   *
+   * @param content content to download
+   */
+  public void onDownloadSelectedContent(ContentModel content, boolean sameName);
+
+  /**
+   * Handle content selection deletion event
+   *
+   * @param content content to remove
+   */
+  public void onDeleteSelectedContent(ContentModel content);
+
+  /**
+   * Handle content rename event
+   *
+   * @param content content to move
+   * @param newContent content with the new name
+   */
+  public void onMoveSelectedContent(ContentModel content, ContentModel newContent);
 
   /**
    * Handle user paht change request

@@ -69,7 +69,7 @@ public class TransferPresenter {
     TransferModel model = new TransferModel();
     model.setType(TransferModel.Type.UPLOAD);
     model.setFileName(event.getFile().getName());
-    model.setLocalDir(event.getFile().getPath().replaceAll("\\", "/"));
+    model.setLocalDir(event.getFile().getPath().replace('\\', '/'));
     model.setRemoteDir(event.getDestination());
     model.setSize(event.getFile().getSize());
     if (TransferEvent.Status.RUNNING.equals(event.getStatus())) {

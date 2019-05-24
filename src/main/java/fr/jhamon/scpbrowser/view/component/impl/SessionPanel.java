@@ -6,6 +6,7 @@ import java.awt.Dialog.ModalityType;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.lang3.StringUtils;
 
 import fr.jhamon.scpbrowser.model.ContentModel;
+import fr.jhamon.scpbrowser.model.FileModel;
 import fr.jhamon.scpbrowser.utils.IconUtils;
 import fr.jhamon.scpbrowser.utils.PropertiesUtils;
 import fr.jhamon.scpbrowser.view.component.ContentViewer;
@@ -45,7 +47,8 @@ public class SessionPanel extends JPanel implements SessionView {
 
   private ContentEventHandler eventHandler;
 
-  private JFileChooser fileChooser;
+  private JFileChooser uploadFileChooser;
+  private JFileChooser downloadFileChooser;
 
   public SessionPanel() {
     super();
@@ -101,7 +104,7 @@ public class SessionPanel extends JPanel implements SessionView {
 
     this.contentTable = new FolderContentTable();
 
-    this.fileChooser = new JFileChooser() {
+    this.uploadFileChooser = new JFileChooser() {
 
       private static final long serialVersionUID = 6310848709236878971L;
 
@@ -113,10 +116,29 @@ public class SessionPanel extends JPanel implements SessionView {
         return dialog;
       }
     };
-    this.fileChooser.setMultiSelectionEnabled(false);
-    this.fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    this.fileChooser.setDialogTitle(
-        PropertiesUtils.getViewProperty("scpbrowser.dialog.filechooser.title"));
+    this.uploadFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
+    this.uploadFileChooser.setMultiSelectionEnabled(false);
+    this.uploadFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    this.uploadFileChooser.setDialogTitle(
+        PropertiesUtils.getViewProperty("scpbrowser.dialog.filechooser.title.upload"));
+
+    this.downloadFileChooser = new JFileChooser() {
+
+      private static final long serialVersionUID = -7395461978159463199L;
+
+      @Override
+      protected JDialog createDialog(Component parent)
+          throws HeadlessException {
+        JDialog dialog = super.createDialog(parent);
+        dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+        return dialog;
+      }
+    };
+    this.downloadFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+    this.downloadFileChooser.setMultiSelectionEnabled(false);
+    this.downloadFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    this.downloadFileChooser.setDialogTitle(
+        PropertiesUtils.getViewProperty("scpbrowser.dialog.filechooser.title.download"));
 
   }
 
@@ -181,14 +203,37 @@ public class SessionPanel extends JPanel implements SessionView {
 
       @Override
       public void run() {
-        int returnVal = fileChooser.showDialog(null, PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.filechooser.button"));
+        int returnVal = uploadFileChooser.showDialog(null, PropertiesUtils
+            .getViewProperty("scpbrowser.dialog.filechooser.button.upload"));
         if (returnVal == JFileChooser.APPROVE_OPTION) {
           new Thread(new Runnable() {
             @Override
             public void run() {
               eventHandler.onUploadEvent(
-                  fileChooser.getSelectedFile().getAbsolutePath());
+                  uploadFileChooser.getSelectedFile().getAbsolutePath());
+            }
+          }).start();
+        }
+      }
+    });
+  }
+
+
+
+  @Override
+  public void openDownloadFileChooser(FileModel fileModel) {
+    SwingUtilities.invokeLater(new Runnable() {
+
+      @Override
+      public void run() {
+        downloadFileChooser.setSelectedFile(new File(downloadFileChooser.getCurrentDirectory(), fileModel.getName()));
+        int returnVal = downloadFileChooser.showSaveDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+          new Thread(new Runnable() {
+            @Override
+            public void run() {
+              eventHandler.onDownloadEvent(fileModel,
+                  downloadFileChooser.getSelectedFile());
             }
           }).start();
         }

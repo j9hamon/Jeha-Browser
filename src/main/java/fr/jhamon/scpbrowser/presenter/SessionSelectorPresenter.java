@@ -62,7 +62,7 @@ public class SessionSelectorPresenter implements SessionSelectionEventHandler {
             ? Integer.valueOf(this.view.getTimeoutUploadField().getText())
                 : Constantes.TIMEOUT_UPLOAD));
     if (!ConfigUtils.getSessionConfigs().contains(model)) {
-      ConfigUtils.saveSessionConfig(model);
+      ConfigUtils.addSessionConfig(model);
       // reload list
       List<SessionConfigModel> configs = ConfigUtils.getSessionConfigs();
       this.view.setSavedSessionsList(configs);

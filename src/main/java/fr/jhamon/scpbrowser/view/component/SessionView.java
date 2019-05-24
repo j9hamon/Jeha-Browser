@@ -1,5 +1,6 @@
 package fr.jhamon.scpbrowser.view.component;
 
+import fr.jhamon.scpbrowser.model.FileModel;
 import fr.jhamon.scpbrowser.view.component.event.handler.ContentEventHandler;
 
 /**
@@ -37,5 +38,11 @@ public interface SessionView {
    * @param eventHandler
    */
   void setEventHandler(ContentEventHandler eventHandler);
+
+
+  /**
+   * Open a view to pick the destination file/folder for download
+   */
+  void openDownloadFileChooser(FileModel content);
 
 }

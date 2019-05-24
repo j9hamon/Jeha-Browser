@@ -13,6 +13,7 @@ import fr.jhamon.scpbrowser.model.SessionConfigModel;
 import fr.jhamon.scpbrowser.model.exception.TimeoutException;
 import fr.jhamon.scpbrowser.utils.ConfigUtils;
 import fr.jhamon.scpbrowser.utils.LoggerUtils;
+import fr.jhamon.scpbrowser.utils.TransferUtils;
 
 /**
  * Utility class for sessions
@@ -57,13 +58,14 @@ public class SessionUtils {
    *
    * @param sessionConfModel server configuration
    * @param filePath         path to download
+   * @param destFilePath     destination path
    * @return the shell command
    */
   public static String buildScpDownloadCommand(
-      SessionConfigModel sessionConfModel, String filePath) {
+      SessionConfigModel sessionConfModel, String filePath, String destFilePath) {
     StringBuilder builder = new StringBuilder("scp#")
         .append(sessionConfModel.getUsername()).append("@")
-        .append(sessionConfModel.getServer()).append(":").append(filePath)
+        .append(sessionConfModel.getServer()).append(":").append(TransferUtils.getCygwinPath(destFilePath))
         .append(" ").append(ConfigUtils.getConfigProperty("racf")).append(":")
         .append(ConfigUtils.getUnixDownloadDirectory());
     return builder.toString();

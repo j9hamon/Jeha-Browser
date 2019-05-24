@@ -39,14 +39,6 @@ public class FileModel extends ContentModel {
   }
 
   /**
-   * @return the file full path made of file path and name
-   */
-  public String getFullPath() {
-    return new StringBuilder(this.path).append("/").append(this.name)
-        .toString();
-  }
-
-  /**
    * @return the size
    */
   public long getSize() {

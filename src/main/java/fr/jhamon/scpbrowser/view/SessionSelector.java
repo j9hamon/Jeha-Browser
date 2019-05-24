@@ -82,7 +82,7 @@ public class SessionSelector extends JDialog {
     this.savedSessionsBox.setEditable(false);
     this.savedSessionsBox.setRenderer(new SessionConfigBoxRenderer());
     this.savedSessionConnectButton = new JButton(
-        IconUtils.createImageIcon("/right.png"));
+        IconUtils.createImageIcon("/right.png", 20, 20));
     this.savedSessionConnectButton.setToolTipText(PropertiesUtils
         .getViewProperty("scpbrowser.dialog.session.tooltip.connect"));
     this.savedSessionConnectButton.addActionListener(new ActionListener() {
@@ -186,7 +186,7 @@ public class SessionSelector extends JDialog {
     this.timeoutUploadField.setText(String.valueOf(Constantes.TIMEOUT_UPLOAD));
 
     this.saveSessionButton = new JButton(
-        IconUtils.createImageIcon("/save.png"));
+        IconUtils.createImageIcon("/save.png", 20, 20));
     this.saveSessionButton.setEnabled(false);
     this.saveSessionButton.setToolTipText(PropertiesUtils
         .getViewProperty("scpbrowser.dialog.session.tooltip.save"));
@@ -209,7 +209,7 @@ public class SessionSelector extends JDialog {
       }
     });
     this.newSessionConnectButton = new JButton(
-        IconUtils.createImageIcon("/right.png"));
+        IconUtils.createImageIcon("/right.png", 20, 20));
     this.newSessionConnectButton.setEnabled(false);
     this.newSessionConnectButton.setToolTipText(PropertiesUtils
         .getViewProperty("scpbrowser.dialog.session.tooltip.connect"));

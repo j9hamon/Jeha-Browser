@@ -62,7 +62,7 @@ public class SessionPresenter implements ContentEventHandler {
       Pattern.MULTILINE);
 
   private static final SimpleDateFormat LS_DATE_FORMAT = new SimpleDateFormat(
-      "yyyy-MM-dd HH:mm:ss.SSS");
+      "yyyy-MM-dd HH:mm:ss");
 
   private SessionView view;
 
@@ -371,7 +371,7 @@ public class SessionPresenter implements ContentEventHandler {
    *
    * @param file file to download
    */
-  public void downloadContent(FileModel file) {
+  public void downloadContent(FileModel file, File destination) {
     LoggerUtils.debug(String.format("Downloading %s for %s", file.getFullPath(),
         sessionModel.getConfiguration()));
 
@@ -379,7 +379,7 @@ public class SessionPresenter implements ContentEventHandler {
     try {
       MainEventBus.getInstance().post(new DownloadEvent(downloadId, file,
           TransferEvent.Status.RUNNING, ConfigUtils.getDownloadDirectory()));
-      this.sessionManager.downloadFile(this.sessionModel, file.getFullPath());
+      this.sessionManager.downloadFile(this.sessionModel, file.getFullPath(), destination);
       MainEventBus.getInstance().post(new DownloadEvent(downloadId, file,
           TransferEvent.Status.SUCCESS, ConfigUtils.getDownloadDirectory()));
     } catch (SessionException e) {
@@ -393,17 +393,6 @@ public class SessionPresenter implements ContentEventHandler {
       LoggerUtils.error(PropertiesUtils.getViewProperty(
           "scpbrowser.dialog.file.download.error.message", file.getName()) + " "
           + sessionModel.getConfiguration());
-    }
-  }
-
-  @Override
-  public void onSelectedContent(ContentModel content) {
-    if (content != null) {
-      if (content instanceof FileModel) {
-        this.downloadContent((FileModel) content);
-      } else {
-        this.moveToDir((FolderModel) content);
-      }
     }
   }
 
@@ -501,6 +490,101 @@ public class SessionPresenter implements ContentEventHandler {
           .getViewProperty("scpbrowser.dialog.action.mkdir.error.title"));
       LoggerUtils.error(String.format("MakeDir %s in %s failed for %s", text,
           this.currentDir, sessionModel.getConfiguration()));
+    }
+  }
+
+  @Override
+  public void onDownloadSelectedContent(ContentModel content, boolean sameName) {
+    if (content != null) {
+      if (content instanceof FileModel) {
+        if (sameName) {
+          this.downloadContent((FileModel) content, null);
+        } else {
+          this.view.openDownloadFileChooser((FileModel) content);
+        }
+      } else {
+        // TODO popup unavailable action
+      }
+    }
+  }
+
+  @Override
+  public void onDeleteSelectedContent(ContentModel content) {
+    LoggerUtils.debug(String.format("Remove content %s in %s for %s", content.getName(),
+        this.currentDir, sessionModel.getConfiguration()));
+    try {
+      // clear streams
+      if (this.contentStreams.getRight().available() > 0) {
+        this.contentStreams.getRight()
+        .skip(this.contentStreams.getRight().available());
+      }
+      // send mkdir command
+      if (content instanceof FolderModel) {
+        this.contentStreams.getLeft().write(("rm -r " + ((FolderModel)content).getFullPath() + "\n").getBytes());
+      } else {
+        this.contentStreams.getLeft().write(("rm " + ((FileModel)content).getFullPath() + "\n").getBytes());
+      }
+      this.contentStreams.getLeft().flush();
+      // wait for command execution
+      SessionUtils.waitFor(this.contentStreams.getRight(), endOfCmdPattern,
+          this.sessionModel.getConfiguration().getCommandTimeout());
+
+    } catch (IOException | InterruptedException | TimeoutException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.rm.error.message", content.getName()),
+          PropertiesUtils
+          .getViewProperty("scpbrowser.dialog.action.rm.error.title"));
+      LoggerUtils.error(String.format("rm %s in %s failed for %s", content.getFullPath(),
+          this.currentDir, sessionModel.getConfiguration()));
+    }
+  }
+
+  @Override
+  public void onMoveSelectedContent(ContentModel content, ContentModel newContent) {
+    LoggerUtils.debug(String.format("Move content %s in %s to %s for %s", content.getName(),
+        this.currentDir, newContent.getFullPath(), sessionModel.getConfiguration()));
+    try {
+      // clear streams
+      if (this.contentStreams.getRight().available() > 0) {
+        this.contentStreams.getRight()
+        .skip(this.contentStreams.getRight().available());
+      }
+      // send mkdir command
+      if (content instanceof FolderModel) {
+        this.contentStreams.getLeft().write(("mv -r" + ((FolderModel)content).getFullPath() + " " + newContent.getFullPath() + "\n").getBytes());
+      } else {
+        this.contentStreams.getLeft().write(("mv " + ((FileModel)content).getFullPath() + " " + newContent.getFullPath() + "\n").getBytes());
+      }
+      this.contentStreams.getLeft().flush();
+      // wait for command execution
+      SessionUtils.waitFor(this.contentStreams.getRight(), endOfCmdPattern,
+          this.sessionModel.getConfiguration().getCommandTimeout());
+
+    } catch (IOException | InterruptedException | TimeoutException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.mv.error.message", content.getFullPath(), newContent.getFullPath()),
+          PropertiesUtils
+          .getViewProperty("scpbrowser.dialog.action.mv.error.title"));
+      LoggerUtils.error(String.format("mv %s to %s failed for %s", content.getFullPath(),
+          newContent.getFullPath(), sessionModel.getConfiguration()));
+    }
+  }
+
+  @Override
+  public void onOpenSelectedContent(ContentModel content) {
+    if (content != null) {
+      if (content instanceof FolderModel) {
+        this.moveToDir((FolderModel) content);
+      }
+    }
+  }
+
+  @Override
+  public void onDownloadEvent(FileModel fileToDownload, File destination) {
+    if (fileToDownload != null && destination != null) {
+      this.downloadContent(fileToDownload, destination);
     }
   }
 
