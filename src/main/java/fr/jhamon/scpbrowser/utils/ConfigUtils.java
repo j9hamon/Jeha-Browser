@@ -17,8 +17,7 @@ import fr.jhamon.scpbrowser.model.SessionConfigModel;
 /**
  * Configuration utilities
  *
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public class ConfigUtils {
