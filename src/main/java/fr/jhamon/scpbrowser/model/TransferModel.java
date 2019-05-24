@@ -15,8 +15,6 @@ public class TransferModel {
 
   private Type type;
 
-  private String fileName;
-
   private String localDir;
 
   private String remoteDir;
@@ -109,20 +107,6 @@ public class TransferModel {
    */
   public void setType(Type type) {
     this.type = type;
-  }
-
-  /**
-   * @return the fileName
-   */
-  public String getFileName() {
-    return fileName;
-  }
-
-  /**
-   * @param fileName the fileName to set
-   */
-  public void setFileName(String fileName) {
-    this.fileName = fileName;
   }
 
 }

@@ -17,20 +17,19 @@ public class TransferEvent {
 
   private Status status;
 
-  private FileModel file;
+  private FileModel fileSrc;
 
-  private String destination;
+  private FileModel fileDest;
 
   public TransferEvent(long id) {
     this.id = id;
   }
 
-  public TransferEvent(long id, FileModel file, Status status,
-      String destination) {
+  public TransferEvent(long id, FileModel fileSrc,  FileModel fileDest, Status status) {
     this.id = id;
-    this.file = file;
+    this.fileSrc = fileSrc;
+    this.fileDest = fileDest;
     this.status = status;
-    this.destination = destination;
   }
 
   /**
@@ -48,29 +47,35 @@ public class TransferEvent {
   }
 
   /**
-   * @return the file
+   * @return the fileSrc
    */
-  public FileModel getFile() {
-    return file;
+  public FileModel getFileSrc() {
+    return fileSrc;
   }
 
   /**
-   * @param file the file to set
+   * @param file the fileSrc to set
    */
-  public void setFile(FileModel file) {
-    this.file = file;
-  }
-
-  public String getDestination() {
-    return destination;
-  }
-
-  public void setDestination(String destination) {
-    this.destination = destination;
+  public void setFileSrc(FileModel file) {
+    this.fileSrc = file;
   }
 
   public long getId() {
     return id;
+  }
+
+  /**
+   * @return the fileDest
+   */
+  public FileModel getFileDest() {
+    return fileDest;
+  }
+
+  /**
+   * @param fileDest the fileDest to set
+   */
+  public void setFileDest(FileModel fileDest) {
+    this.fileDest = fileDest;
   }
 
 }

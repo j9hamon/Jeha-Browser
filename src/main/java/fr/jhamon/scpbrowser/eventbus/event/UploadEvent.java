@@ -13,9 +13,8 @@ public class UploadEvent extends TransferEvent {
     super(id);
   }
 
-  public UploadEvent(long id, FileModel file, Status status,
-      String destination) {
-    super(id, file, status, destination);
+  public UploadEvent(long id, FileModel fileSrc, FileModel fileDest,  Status status) {
+    super(id, fileSrc, fileDest, status);
   }
 
 }

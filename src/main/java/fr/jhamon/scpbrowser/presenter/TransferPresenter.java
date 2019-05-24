@@ -35,10 +35,9 @@ public class TransferPresenter {
     Date date = Date.from(Instant.now());
     TransferModel model = new TransferModel();
     model.setType(TransferModel.Type.DOWNLOAD);
-    model.setFileName(event.getFile().getName());
-    model.setLocalDir(event.getDestination());
-    model.setRemoteDir(event.getFile().getPath());
-    model.setSize(event.getFile().getSize());
+    model.setLocalDir(event.getFileDest().getFullPath());
+    model.setRemoteDir(event.getFileSrc().getFullPath());
+    model.setSize(event.getFileSrc().getSize());
     if (TransferEvent.Status.RUNNING.equals(event.getStatus())) {
       model.setStartDate(date);
       this.view.addRunningTransfer(event.getId(), model);
@@ -68,10 +67,9 @@ public class TransferPresenter {
     Date date = Date.from(Instant.now());
     TransferModel model = new TransferModel();
     model.setType(TransferModel.Type.UPLOAD);
-    model.setFileName(event.getFile().getName());
-    model.setLocalDir(event.getFile().getPath().replace('\\', '/'));
-    model.setRemoteDir(event.getDestination());
-    model.setSize(event.getFile().getSize());
+    model.setLocalDir(event.getFileSrc().getFullPath().replace('\\', '/'));
+    model.setRemoteDir(event.getFileDest().getFullPath());
+    model.setSize(event.getFileSrc().getSize());
     if (TransferEvent.Status.RUNNING.equals(event.getStatus())) {
       model.setStartDate(date);
       this.view.addRunningTransfer(event.getId(), model);
@@ -94,7 +92,6 @@ public class TransferPresenter {
       this.view.removeRunningTransfer(event.getId());
       this.view.addFailureTransfer(model);
     }
-    // TODO push to table
   }
 
 }

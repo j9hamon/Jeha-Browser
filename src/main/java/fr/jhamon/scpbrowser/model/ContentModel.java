@@ -77,8 +77,11 @@ public class ContentModel {
    * @return the content full path made of content path and name
    */
   public String getFullPath() {
-    return new StringBuilder(this.path).append("/").append(this.name)
-        .toString();
+    StringBuilder fullPath =  new StringBuilder(this.path);
+    if (!this.path.endsWith("/")) {
+      fullPath.append("/");
+    }
+    return fullPath.append(this.name).toString();
   }
 
 }

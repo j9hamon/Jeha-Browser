@@ -33,7 +33,6 @@ public class TransferTableModel extends DefaultTableModel {
 
   private static final String[] COLUMN_IDS = new String[] {
       PropertiesUtils.getViewProperty("scpbrowser.transfer.table.column.type"),
-      PropertiesUtils.getViewProperty("scpbrowser.transfer.table.column.file.name"),
       PropertiesUtils
       .getViewProperty("scpbrowser.transfer.table.column.file.local"),
       PropertiesUtils
@@ -91,19 +90,17 @@ public class TransferTableModel extends DefaultTableModel {
             return UPLOAD_ICON;
           }
         case 1:
-          return rowContent.getFileName();
-        case 2:
           return rowContent.getLocalDir();
-        case 3:
+        case 2:
           return rowContent.getRemoteDir();
-        case 4:
+        case 3:
           return TransferUtils.getFormatedSize(rowContent.getSize());
-        case 5:
+        case 4:
           if (rowContent.getEndDate() != null) {
             return DATE_FORMATTER.format(rowContent.getStartDate());
           }
           return StringUtils.EMPTY;
-        case 6:
+        case 5:
           if (rowContent.getEndDate() != null) {
             return DATE_FORMATTER.format(rowContent.getEndDate());
           }

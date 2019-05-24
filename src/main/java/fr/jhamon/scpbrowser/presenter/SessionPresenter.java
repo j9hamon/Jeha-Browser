@@ -376,15 +376,22 @@ public class SessionPresenter implements ContentEventHandler {
         sessionModel.getConfiguration()));
 
     long downloadId = TransferUtils.getUniqueId();
+
+    FileModel fileDest;
+    if (destination != null) {
+      fileDest = new FileModel(destination.getName(), destination.getParentFile().getAbsolutePath(), null, 0, null);
+    } else {
+      fileDest = new FileModel(file.getName(), ConfigUtils.getDownloadDirectory(), null, 0, null);
+    }
     try {
-      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file,
-          TransferEvent.Status.RUNNING, ConfigUtils.getDownloadDirectory()));
+      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file, fileDest,
+          TransferEvent.Status.RUNNING));
       this.sessionManager.downloadFile(this.sessionModel, file.getFullPath(), destination);
-      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file,
-          TransferEvent.Status.SUCCESS, ConfigUtils.getDownloadDirectory()));
+      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file, fileDest,
+          TransferEvent.Status.SUCCESS));
     } catch (SessionException e) {
-      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file,
-          TransferEvent.Status.FAILURE, ConfigUtils.getDownloadDirectory()));
+      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file, fileDest,
+          TransferEvent.Status.FAILURE));
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.file.download.error.message", file.getName()),
@@ -435,21 +442,23 @@ public class SessionPresenter implements ContentEventHandler {
 
     long uploadId = TransferUtils.getUniqueId();
     File file = new File(absolutePath);
-    FileModel fileModel = new FileModel(file.getName(), file.getAbsolutePath(),
+    FileModel fileSrc = new FileModel(file.getName(), file.getParentFile().getAbsolutePath(),
         null, file.length(), null);
+
+    FileModel fileDest = new FileModel(file.getName(), this.currentDir, null, 0, null);
     try {
-      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileModel,
-          TransferEvent.Status.RUNNING, this.currentDir));
+      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileSrc, fileDest,
+          TransferEvent.Status.RUNNING));
 
       this.sessionManager.uploadFile(this.sessionModel, absolutePath,
           this.currentDir);
-      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileModel,
-          TransferEvent.Status.SUCCESS, this.currentDir));
+      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileSrc, fileDest,
+          TransferEvent.Status.SUCCESS));
       this.refreshContent();
 
     } catch (SessionException e) {
-      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileModel,
-          TransferEvent.Status.FAILURE, this.currentDir));
+      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileSrc, fileDest,
+          TransferEvent.Status.FAILURE));
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.file.upload.error.message", absolutePath),

@@ -13,9 +13,9 @@ public class DownloadEvent extends TransferEvent {
     super(id);
   }
 
-  public DownloadEvent(long id, FileModel file, Status status,
-      String destination) {
-    super(id, file, status, destination);
+  public DownloadEvent(long id, FileModel fileSrc, FileModel fileDest, Status status) {
+    super(id, fileSrc, fileDest, status);
   }
+
 
 }
