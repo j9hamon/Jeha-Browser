@@ -503,7 +503,11 @@ public class SessionPresenter implements ContentEventHandler {
           this.view.openDownloadFileChooser((FileModel) content);
         }
       } else {
-        // TODO popup unavailable action
+        ErrorUtils.showError(
+            PropertiesUtils.getViewProperty(
+                "scpbrowser.dialog.file.download.folder.error.message"),
+            PropertiesUtils
+            .getViewProperty("scpbrowser.dialog.file.download.error.title"));
       }
     }
   }
@@ -526,9 +530,17 @@ public class SessionPresenter implements ContentEventHandler {
       }
       this.contentStreams.getLeft().flush();
       // wait for command execution
-      SessionUtils.waitFor(this.contentStreams.getRight(), endOfCmdPattern,
+      String result = SessionUtils.readUntil(this.contentStreams.getRight(), endOfCmdPattern,
           this.sessionModel.getConfiguration().getCommandTimeout());
+      if (result.contains("rm: cannot")) {
+        ErrorUtils.showError(
+            PropertiesUtils.getViewProperty(
+                "scpbrowser.dialog.file.remove.error.message", content.getFullPath()),
+            PropertiesUtils
+            .getViewProperty("scpbrowser.dialog.file.remove.error.title"));
+      }
 
+      refreshContent();
     } catch (IOException | InterruptedException | TimeoutException e) {
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
@@ -558,9 +570,16 @@ public class SessionPresenter implements ContentEventHandler {
       }
       this.contentStreams.getLeft().flush();
       // wait for command execution
-      SessionUtils.waitFor(this.contentStreams.getRight(), endOfCmdPattern,
+      String result = SessionUtils.readUntil(this.contentStreams.getRight(), endOfCmdPattern,
           this.sessionModel.getConfiguration().getCommandTimeout());
-
+      if (result.contains("mv: cannot")) {
+        ErrorUtils.showError(
+            PropertiesUtils.getViewProperty(
+                "scpbrowser.dialog.file.move.error.message", content.getFullPath()),
+            PropertiesUtils
+            .getViewProperty("scpbrowser.dialog.file.move.error.title"));
+      }
+      refreshContent();
     } catch (IOException | InterruptedException | TimeoutException e) {
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(

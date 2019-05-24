@@ -71,6 +71,7 @@ public class TransferPanel extends JPanel implements TransferView {
 
     // remove bold on tab selection
     tabs.addChangeListener(new ChangeListener() {
+      @Override
       public void stateChanged(ChangeEvent e) {
         tabs.setTitleAt(tabs.getSelectedIndex(),
             removeBoldText(tabs.getTitleAt(tabs.getSelectedIndex())));
@@ -140,6 +141,6 @@ public class TransferPanel extends JPanel implements TransferView {
   }
 
   private String removeBoldText(String text) {
-    return text.replace("<html><b>", "").replace("<html><b>", "");
+    return text.replace("<html><b>", "").replace("</html></b>", "");
   }
 }

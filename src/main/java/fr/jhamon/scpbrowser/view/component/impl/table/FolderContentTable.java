@@ -169,7 +169,7 @@ public class FolderContentTable extends JTable implements ContentViewer {
             .getModel()).getContentAt(rowModelId);
         String newName = JOptionPane.showInputDialog(null, PropertiesUtils.getViewProperty("scpbrowser.dialog.content.rename.message"),content.getName());
         if (newName != null) {
-          final ContentModel newContent = new ContentModel(content.getPath(), newName, null);
+          final ContentModel newContent = new ContentModel(newName, content.getPath(), null);
           new Thread(new Runnable() {
             @Override
             public void run() {

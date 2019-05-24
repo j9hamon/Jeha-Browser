@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.INIConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
@@ -80,7 +81,7 @@ public class ConfigUtils {
    */
   public static void setSessionConfigs(List<SessionConfigModel> list) {
     CONFIG_FILE.clearProperty("sessions.session");
-    CONFIG_FILE.addProperty("sessions.session", list.toArray());
+    CONFIG_FILE.addProperty("sessions.session", list.stream().map(SessionConfigModel::toString).collect(Collectors.toList()));
     saveConfig();
   }
 

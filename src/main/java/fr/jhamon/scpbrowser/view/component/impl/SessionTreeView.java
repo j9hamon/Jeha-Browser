@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +55,7 @@ public class SessionTreeView extends JPanel {
     this.sessionTree.setRootVisible(false);
     this.sessionTree.setShowsRootHandles(true);
     this.sessionTree.getSelectionModel()
-        .setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    .setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
     MouseListener ml = new MouseAdapter() {
       @Override
@@ -74,7 +75,7 @@ public class SessionTreeView extends JPanel {
                 @Override
                 public void run() {
                   eventHandler
-                      .onStartSessionEvent((SessionConfigModel) nodeObject);
+                  .onStartSessionEvent((SessionConfigModel) nodeObject);
                 }
               }).start();
             }
@@ -106,23 +107,25 @@ public class SessionTreeView extends JPanel {
         if (nodeObject != null && nodeObject instanceof SessionConfigModel) {
           String newName = JOptionPane.showInputDialog(null,
               PropertiesUtils.getViewProperty(
-                  "scpbrowser.sessiontree.dialog.rename.session.message"),
+                  "scpbrowser..dialog.sessiontree.rename.session.message"),
               ((SessionConfigModel) nodeObject).getName());
 
           if (StringUtils.isNotBlank(newName)) {
             // remove previous config
             List<SessionConfigModel> configs = ConfigUtils.getSessionConfigs();
-            configs.remove((SessionConfigModel) nodeObject);
+            configs.remove(nodeObject);
             // update config
             ((SessionConfigModel) nodeObject).setName(newName);
             configs.add((SessionConfigModel) nodeObject);
             // save configs
+            Collections.sort(configs);
             ConfigUtils.setSessionConfigs(configs);
+            refreshTree(configs);
           }
         } else {
           String newName = JOptionPane.showInputDialog(null,
               PropertiesUtils.getViewProperty(
-                  "scpbrowser.sessiontree.dialog.rename.group.message"),
+                  "scpbrowser..dialog.sessiontree.rename.group.message"),
               nodeObject);
           if (newName != null) {
             // get partial name
@@ -140,9 +143,10 @@ public class SessionTreeView extends JPanel {
             while (iter.hasNext()) {
               SessionConfigModel config = iter.next();
               config
-                  .setName(config.getName().replaceFirst(partialName, newName));
+              .setName(config.getName().replaceFirst(partialName, newName));
             }
             // save configs
+            Collections.sort(configs);
             ConfigUtils.setSessionConfigs(configs);
             refreshTree(configs);
           }
@@ -173,9 +177,10 @@ public class SessionTreeView extends JPanel {
           if (dialogResult == JOptionPane.YES_OPTION) {
             // remove previous config
             List<SessionConfigModel> configs = ConfigUtils.getSessionConfigs();
-            configs.remove((SessionConfigModel) nodeObject);
+            configs.remove(nodeObject);
             // save configs
             ConfigUtils.setSessionConfigs(configs);
+            refreshTree(configs);
           }
         } else {
           int dialogResult = JOptionPane.showConfirmDialog(null,
@@ -189,8 +194,10 @@ public class SessionTreeView extends JPanel {
             // get partial name
             String partialName = "";
             for (TreeNode node : treeNode.getPath()) {
-              partialName = partialName
-                  + ((DefaultMutableTreeNode) node).getUserObject() + "/";
+              if (!((DefaultMutableTreeNode)node).isRoot()) {
+                partialName = partialName
+                    + ((DefaultMutableTreeNode) node).getUserObject() + "/";
+              }
             }
             // remove matching configs
             List<SessionConfigModel> configs = ConfigUtils.getSessionConfigs();
