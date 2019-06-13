@@ -1,13 +1,11 @@
 package fr.jhamon.scpbrowser.view.component.impl.table;
 
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
-
-import org.apache.commons.lang3.StringUtils;
 
 import fr.jhamon.scpbrowser.model.TransferModel;
 import fr.jhamon.scpbrowser.utils.IconUtils;
@@ -22,9 +20,6 @@ import fr.jhamon.scpbrowser.utils.TransferUtils;
 public class TransferTableModel extends DefaultTableModel {
 
   private static final long serialVersionUID = -6574669841142610225L;
-
-  private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
-      "yyyy-MM-dd HH:mm:ss.SSS");
 
   private static final ImageIcon DOWNLOAD_ICON = IconUtils
       .createImageIcon("/download.png", 16, 16);
@@ -68,11 +63,9 @@ public class TransferTableModel extends DefaultTableModel {
       case 3:
         return String.class;
       case 4:
-        return String.class;
+        return Date.class;
       case 5:
-        return String.class;
-      case 6:
-        return String.class;
+        return Date.class;
       default:
         return super.getColumnClass(columnIndex);
     }
@@ -96,15 +89,11 @@ public class TransferTableModel extends DefaultTableModel {
         case 3:
           return TransferUtils.getFormatedSize(rowContent.getSize());
         case 4:
-          if (rowContent.getEndDate() != null) {
-            return DATE_FORMATTER.format(rowContent.getStartDate());
-          }
-          return StringUtils.EMPTY;
+          return rowContent.getStartDate();
         case 5:
-          if (rowContent.getEndDate() != null) {
-            return DATE_FORMATTER.format(rowContent.getEndDate());
-          }
-          return StringUtils.EMPTY;
+          return rowContent.getEndDate();
+        default:
+          return super.getValueAt(row, column);
       }
     }
     return null;

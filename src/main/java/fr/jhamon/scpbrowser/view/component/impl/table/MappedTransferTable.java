@@ -1,5 +1,7 @@
 package fr.jhamon.scpbrowser.view.component.impl.table;
 
+import java.util.Date;
+
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
@@ -20,6 +22,7 @@ public class MappedTransferTable extends JTable {
     this.setRowSorter(null);
     this.setShowGrid(false);
     //        this.setIntercellSpacing(new Dimension(0, 0));
+    this.setDefaultRenderer(Date.class, new DateCellRenderer());
   }
 
   public void clear() {

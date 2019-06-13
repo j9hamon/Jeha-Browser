@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -30,6 +31,7 @@ import fr.jhamon.scpbrowser.utils.PropertiesUtils;
 import fr.jhamon.scpbrowser.view.component.ContentViewer;
 import fr.jhamon.scpbrowser.view.component.SessionView;
 import fr.jhamon.scpbrowser.view.component.event.handler.ContentEventHandler;
+import fr.jhamon.scpbrowser.view.component.impl.table.DateCellRenderer;
 import fr.jhamon.scpbrowser.view.component.impl.table.FolderContentTable;
 
 /**
@@ -127,6 +129,7 @@ public class SessionPanel extends JPanel implements SessionView {
     });
 
     this.contentTable = new FolderContentTable();
+    ((JTable) this.contentTable).setDefaultRenderer(Date.class, new DateCellRenderer());
 
     this.uploadFileChooser = new JFileChooser() {
 

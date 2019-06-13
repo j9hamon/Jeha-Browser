@@ -2,6 +2,7 @@ package fr.jhamon.scpbrowser.view.component.impl.table;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -25,6 +26,7 @@ public class TransferTable extends JTable {
     this.setRowSorter(null);
     this.setShowGrid(false);
     // table.setIntercellSpacing(new Dimension(0, 0));
+    this.setDefaultRenderer(Date.class, new DateCellRenderer());
   }
 
   public void clear() {
@@ -53,5 +55,6 @@ public class TransferTable extends JTable {
       this.setComponentPopupMenu(null);
     }
   }
+
 
 }
