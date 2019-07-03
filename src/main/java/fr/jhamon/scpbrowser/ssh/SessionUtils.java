@@ -65,9 +65,9 @@ public class SessionUtils {
       SessionConfigModel sessionConfModel, String filePath, String destFilePath) {
     StringBuilder builder = new StringBuilder("scp#")
         .append(sessionConfModel.getUsername()).append("@")
-        .append(sessionConfModel.getServer()).append(":").append(TransferUtils.getCygwinPath(destFilePath))
+        .append(sessionConfModel.getServer()).append(":").append(filePath)
         .append(" ").append(ConfigUtils.getConfigProperty("racf")).append(":")
-        .append(ConfigUtils.getUnixDownloadDirectory());
+        .append(TransferUtils.getCygwinPath(destFilePath));
     return builder.toString();
   }
 

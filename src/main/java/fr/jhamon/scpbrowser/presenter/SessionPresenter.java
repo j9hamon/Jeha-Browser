@@ -379,7 +379,7 @@ public class SessionPresenter implements ContentEventHandler {
 
     FileModel fileDest;
     if (destination != null) {
-      fileDest = new FileModel(destination.getName(), destination.getParentFile().getAbsolutePath(), null, 0, null);
+      fileDest = new FileModel(destination.getName(), destination.getParentFile().getAbsolutePath().replace('\\', '/'), null, 0, null);
     } else {
       fileDest = new FileModel(file.getName(), ConfigUtils.getDownloadDirectory(), null, 0, null);
     }
@@ -387,6 +387,10 @@ public class SessionPresenter implements ContentEventHandler {
       MainEventBus.getInstance().post(new DownloadEvent(downloadId, file, fileDest,
           TransferEvent.Status.RUNNING));
       this.sessionManager.downloadFile(this.sessionModel, file.getFullPath(), destination);
+
+      if (!(new File(fileDest.getFullPath()).exists())) {
+        throw new SessionException("Erreur de telechargement.");
+      }
       MainEventBus.getInstance().post(new DownloadEvent(downloadId, file, fileDest,
           TransferEvent.Status.SUCCESS));
     } catch (SessionException e) {

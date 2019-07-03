@@ -213,8 +213,10 @@ public class SessionManager {
       ChannelExec channel = (ChannelExec) session.openChannel("exec");
       channel.setAgentForwarding(true);
       channel.setPty(true);
+
+      String dlDestination = destination != null ? destination.getAbsolutePath() : ConfigUtils.getDownloadDirectory();
       channel.setCommand(SessionUtils.buildScpDownloadCommand(sessionModel.getConfiguration(), filePath,
-          destination != null ? destination.getAbsolutePath() : ConfigUtils.getDownloadDirectory()));
+          dlDestination));
 
       Pair<OutputStream, InputStream> streams = Pair
           .of(channel.getOutputStream(), channel.getInputStream());

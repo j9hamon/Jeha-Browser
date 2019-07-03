@@ -32,6 +32,7 @@ public class TransferUtils {
   }
 
   public static String getCygwinPath(String path) {
+    path = path.replace('\\', '/');
     Matcher driveMatcher = Constantes.WINDOWS_DRIVE_PATTERN.matcher(path);
     if (driveMatcher.find()) {
       path = path.replace(driveMatcher.group(1), String.format(
