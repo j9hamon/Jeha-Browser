@@ -158,13 +158,9 @@ public class SessionConfigModel implements Comparable<SessionConfigModel> {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + commandTimeout;
-    result = prime * result + connectTimeout;
-    result = prime * result + downloadTimeout;
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((password == null) ? 0 : password.hashCode());
     result = prime * result + ((server == null) ? 0 : server.hashCode());
-    result = prime * result + uploadTimeout;
     result = prime * result + ((username == null) ? 0 : username.hashCode());
     return result;
   }
@@ -186,15 +182,6 @@ public class SessionConfigModel implements Comparable<SessionConfigModel> {
       return false;
     }
     SessionConfigModel other = (SessionConfigModel) obj;
-    if (commandTimeout != other.commandTimeout) {
-      return false;
-    }
-    if (connectTimeout != other.connectTimeout) {
-      return false;
-    }
-    if (downloadTimeout != other.downloadTimeout) {
-      return false;
-    }
     if (name == null) {
       if (other.name != null) {
         return false;
@@ -214,9 +201,6 @@ public class SessionConfigModel implements Comparable<SessionConfigModel> {
         return false;
       }
     } else if (!server.equals(other.server)) {
-      return false;
-    }
-    if (uploadTimeout != other.uploadTimeout) {
       return false;
     }
     if (username == null) {
@@ -284,7 +268,7 @@ public class SessionConfigModel implements Comparable<SessionConfigModel> {
   public void setPassword(String password) {
     this.password = password;
   }
-  
+
   @Override
   public int compareTo(SessionConfigModel o) {
     return this.name==null ? -1 : this.name.compareTo(o.getName());
