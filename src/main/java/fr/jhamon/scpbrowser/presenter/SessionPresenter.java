@@ -283,7 +283,7 @@ public class SessionPresenter implements ContentEventHandler {
               type = FileType.getDefaultFileType();
             }
             contentModel = new FileModel(nameLink[0].replaceAll("\"", ""),
-                this.currentDir, date, Integer.valueOf(parts[2]), type);
+                this.currentDir, date, Long.valueOf(parts[2]), type);
             contentList.add(contentModel);
           }
         }

@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import fr.jhamon.scpbrowser.Context;
+import fr.jhamon.scpbrowser.utils.Constantes;
 import fr.jhamon.scpbrowser.utils.IconUtils;
 import fr.jhamon.scpbrowser.utils.PropertiesUtils;
 
@@ -26,6 +27,8 @@ public class FooterBar extends JPanel {
   private JLabel userLabel;
 
   private JLabel passphraseLabel;
+
+  private JLabel versionLabel;
 
   private ImageIcon activeIcon;
   private ImageIcon inactiveIcon;
@@ -55,6 +58,9 @@ public class FooterBar extends JPanel {
 
     this.downloadCounter = new TransferCounter(false);
     this.uploadCounter = new TransferCounter(true);
+
+    this.versionLabel = new JLabel(Constantes.VERSION);
+    this.versionLabel.setBorder(BorderFactory.createEtchedBorder());
   }
 
   private void build() {
@@ -65,6 +71,8 @@ public class FooterBar extends JPanel {
     leftPanel.add(this.userLabel);
     leftPanel.add(Box.createRigidArea(new Dimension(5, 0)));
     leftPanel.add(this.passphraseLabel);
+    leftPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+    leftPanel.add(this.versionLabel);
 
     this.add(leftPanel, BorderLayout.WEST);
 
