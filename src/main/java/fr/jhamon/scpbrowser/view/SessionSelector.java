@@ -245,7 +245,7 @@ public class SessionSelector extends JDialog {
         SessionSelector.this.timeoutCommandField.setText(String.valueOf(savedConfigModel.getCommandTimeout()));
         SessionSelector.this.timeoutConnectField.setText(String.valueOf(savedConfigModel.getConnectTimeout()));
         SessionSelector.this.timeoutDownloadField.setText(String.valueOf(savedConfigModel.getDownloadTimeout()));
-        SessionSelector.this.timeoutUploadLabel.setText(String.valueOf(savedConfigModel.getUploadTimeout()));
+        SessionSelector.this.timeoutUploadField.setText(String.valueOf(savedConfigModel.getUploadTimeout()));
       }
     });
   }

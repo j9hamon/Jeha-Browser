@@ -3,6 +3,8 @@ package fr.jhamon.scpbrowser.utils;
 import java.util.Random;
 import java.util.regex.Matcher;
 
+import fr.jhamon.scpbrowser.model.SizeExtension;
+
 /**
  * @author J.Hamon
  * Copyright 2019 J.Hamon
@@ -12,23 +14,19 @@ public class TransferUtils {
 
   private static Random random = new Random();
 
-  private static final float KB = 1024.0f;
-  private static final float MB = 1024.0f * KB;
-  private static final float GB = 1024.0f * MB;
-
   public static long getUniqueId() {
     return random.nextLong();
   }
 
   public static String getFormatedSize(long size) {
-    if (size > GB) {
-      return String.format("%.1f Go", size / GB);
-    } else if (size > MB) {
-      return String.format("%.1f Mo", size / MB);
-    } else if (size > KB) {
-      return String.format("%.1f Ko", size / KB);
+    if (size > SizeExtension.GO.getDivider()) {
+      return String.format("%.1f "+SizeExtension.GO.getExtension(), size / SizeExtension.GO.getDivider());
+    } else if (size > SizeExtension.MO.getDivider()) {
+      return String.format("%.1f "+SizeExtension.MO.getExtension(), size / SizeExtension.MO.getDivider());
+    } else if (size > SizeExtension.KO.getDivider()) {
+      return String.format("%.1f "+SizeExtension.KO.getExtension(), size / SizeExtension.KO.getDivider());
     }
-    return String.format("%d o", size);
+    return String.format("%d "+SizeExtension.O.getExtension(), size);
   }
 
   public static String getCygwinPath(String path) {
