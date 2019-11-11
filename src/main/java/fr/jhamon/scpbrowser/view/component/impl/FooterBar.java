@@ -1,13 +1,21 @@
 package fr.jhamon.scpbrowser.view.component.impl;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import fr.jhamon.scpbrowser.Context;
@@ -16,8 +24,7 @@ import fr.jhamon.scpbrowser.utils.IconUtils;
 import fr.jhamon.scpbrowser.utils.PropertiesUtils;
 
 /**
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public class FooterBar extends JPanel {
@@ -59,8 +66,44 @@ public class FooterBar extends JPanel {
     this.downloadCounter = new TransferCounter(false);
     this.uploadCounter = new TransferCounter(true);
 
-    this.versionLabel = new JLabel(Constantes.VERSION);
+    this.versionLabel = new JLabel(Constantes.VERSION,
+        IconUtils.createImageIcon("/about.png", 16, 16), JLabel.RIGHT);
     this.versionLabel.setBorder(BorderFactory.createEtchedBorder());
+    this.versionLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    this.versionLabel.addMouseListener(new MouseListener() {
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+      }
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+      }
+
+      @Override
+      public void mouseEntered(MouseEvent e) {
+      }
+
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        try {
+          Desktop.getDesktop().browse(
+              new URL("https://github.com/j9hamon/Jeha-Browser/releases")
+                  .toURI());
+        } catch (IOException | UnsupportedOperationException | SecurityException
+            | URISyntaxException ex) {
+          JOptionPane.showMessageDialog(null,
+              PropertiesUtils.getViewProperty("scpbrowser.dialog.about.message",
+                  Constantes.VERSION),
+              PropertiesUtils.getViewProperty("scpbrowser.dialog.about.title"),
+              JOptionPane.INFORMATION_MESSAGE);
+        }
+      }
+    });
   }
 
   private void build() {
