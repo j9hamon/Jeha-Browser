@@ -117,7 +117,7 @@ public class ConfigUtils {
         System.getProperty("user.home"));
     directory = directory.replace("\\", "/");
     if (!directory.endsWith("/") && !directory.endsWith("\\")) {
-      directory += File.pathSeparator;
+      directory += File.separator;
     }
     return directory;
   }
