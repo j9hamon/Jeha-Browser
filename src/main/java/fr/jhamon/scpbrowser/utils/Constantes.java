@@ -13,7 +13,7 @@ import javax.swing.ImageIcon;
  */
 public final class Constantes {
 
-  public static final String VERSION = "v:1.4.1";
+  public static final String VERSION = "v:1.4.3";
 
   public static final int CONSOLE_MAX_CHARACTERS = 1000;
 
