@@ -217,17 +217,10 @@ public class FolderContentTable extends JTable implements ContentViewer {
         if (newName != null) {
           final ContentModel newContent = new ContentModel(newName,
               content.getPath(), null);
-          final String motive = (String) JOptionPane.showInputDialog(null,
-              PropertiesUtils.getViewProperty(
-                  "scp.browser.dialog.content.input.motive.message"),
-              PropertiesUtils.getViewProperty(
-                  "scp.browser.dialog.content.input.motive.title"),
-              JOptionPane.PLAIN_MESSAGE);
           new Thread(new Runnable() {
             @Override
             public void run() {
-              sessionPresenter.onMoveSelectedContent(content, newContent,
-                  motive);
+              sessionPresenter.onMoveSelectedContent(content, newContent);
             }
           }).start();
         }
@@ -253,16 +246,10 @@ public class FolderContentTable extends JTable implements ContentViewer {
             "Warning", JOptionPane.YES_NO_OPTION);
 
         if (dialogResult == JOptionPane.YES_OPTION) {
-          final String motive = (String) JOptionPane.showInputDialog(null,
-              PropertiesUtils.getViewProperty(
-                  "scp.browser.dialog.content.input.motive.message"),
-              PropertiesUtils.getViewProperty(
-                  "scp.browser.dialog.content.input.motive.title"),
-              JOptionPane.PLAIN_MESSAGE);
           new Thread(new Runnable() {
             @Override
             public void run() {
-              sessionPresenter.onDeleteSelectedContent(content, motive);
+              sessionPresenter.onDeleteSelectedContent(content);
             }
           }).start();
         }

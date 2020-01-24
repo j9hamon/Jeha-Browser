@@ -14,7 +14,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import fr.jhamon.scpbrowser.model.TransferModel;
-import fr.jhamon.scpbrowser.utils.ErrorUtils;
+import fr.jhamon.scpbrowser.utils.DialogUtils;
 import fr.jhamon.scpbrowser.utils.PropertiesUtils;
 
 /**
@@ -61,21 +61,21 @@ public class TransferTable extends JTable {
               try {
                 Desktop.getDesktop().open(new File(transfer.getLocalDir()));
               } catch (IOException ex) {
-                ErrorUtils.showError(
+                DialogUtils.showError(
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.open.error.message",
                         transfer.getLocalDir()),
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.open.error.title"));
               } catch (UnsupportedOperationException ex) {
-                ErrorUtils.showError(
+                DialogUtils.showError(
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.open.error.message",
                         transfer.getLocalDir()),
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.open.error.title"));
               } catch (SecurityException ex) {
-                ErrorUtils.showError(
+                DialogUtils.showError(
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.open.error.message",
                         transfer.getLocalDir()),
@@ -101,21 +101,21 @@ public class TransferTable extends JTable {
                 Desktop.getDesktop().browse(
                     Paths.get(transfer.getLocalDir()).getParent().toUri());
               } catch (IOException ex) {
-                ErrorUtils.showError(
+                DialogUtils.showError(
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.browse.error.message",
                         transfer.getLocalDir()),
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.browse.error.title"));
               } catch (UnsupportedOperationException ex) {
-                ErrorUtils.showError(
+                DialogUtils.showError(
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.browse.error.message",
                         transfer.getLocalDir()),
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.browse.error.title"));
               } catch (SecurityException ex) {
-                ErrorUtils.showError(
+                DialogUtils.showError(
                     PropertiesUtils.getViewProperty(
                         "scpbrowser.dialog.explorer.browse.error.message",
                         transfer.getLocalDir()),

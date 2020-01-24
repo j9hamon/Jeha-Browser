@@ -26,7 +26,8 @@ import fr.jhamon.scpbrowser.model.exception.SessionException;
 import fr.jhamon.scpbrowser.ssh.SessionManager;
 import fr.jhamon.scpbrowser.ssh.SessionUtils;
 import fr.jhamon.scpbrowser.utils.ConfigUtils;
-import fr.jhamon.scpbrowser.utils.ErrorUtils;
+import fr.jhamon.scpbrowser.utils.Constantes;
+import fr.jhamon.scpbrowser.utils.DialogUtils;
 import fr.jhamon.scpbrowser.utils.LoggerUtils;
 import fr.jhamon.scpbrowser.utils.PropertiesUtils;
 import fr.jhamon.scpbrowser.view.SessionSelector;
@@ -38,8 +39,7 @@ import fr.jhamon.scpbrowser.view.component.impl.MainFrame;
 /**
  * Main view presenter
  *
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public class MainPresenter implements ManagementUserEventHandler {
@@ -72,7 +72,7 @@ public class MainPresenter implements ManagementUserEventHandler {
         || StringUtils.isBlank(ConfigUtils.getConfigProperty("sshKey"))) {
       LoggerUtils.fatal(PropertiesUtils.getViewProperty(
           "scpbrowser.dialog.config.property.missing.message", "sshKey"));
-      ErrorUtils.showFatalError(
+      DialogUtils.showFatalError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.config.property.missing.message", "sshKey"),
           PropertiesUtils.getViewProperty(
@@ -83,12 +83,12 @@ public class MainPresenter implements ManagementUserEventHandler {
         LoggerUtils.fatal(PropertiesUtils.getViewProperty(
             "scpbrowser.dialog.key.file.missing.message",
             ConfigUtils.getConfigProperty("sshKey")));
-        ErrorUtils.showFatalError(
+        DialogUtils.showFatalError(
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.key.file.missing.message",
                 ConfigUtils.getConfigProperty("sshKey")),
             PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.key.file.missing.title"));
+                .getViewProperty("scpbrowser.dialog.key.file.missing.title"));
       } else {
         // ask for ssh passhphrase
         try {
@@ -100,7 +100,7 @@ public class MainPresenter implements ManagementUserEventHandler {
                 int dialogCode = JOptionPane.showConfirmDialog(
                     (MainFrame) MainPresenter.this.view, passField,
                     PropertiesUtils
-                    .getViewProperty("scpbrowser.dialog.passphrase"),
+                        .getViewProperty("scpbrowser.dialog.passphrase"),
                     JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (dialogCode == JOptionPane.CANCEL_OPTION) {
                   LoggerUtils.debug("Startup cancelled by user");
@@ -200,12 +200,22 @@ public class MainPresenter implements ManagementUserEventHandler {
     }
     // create new view
     SessionView newView = this.view.createNewSessionView(configModel.getName(),
-        String.format("user: %s\n host: %s", configModel.getUsername(), configModel.getServer()));
+        String.format("user: %s\n host: %s", configModel.getUsername(),
+            configModel.getServer()));
     try {
       LoggerUtils.debug("Openning new session for " + configModel);
+      String motive = Constantes.DEFAULT_MOTIVE;
+      if (ConfigUtils.isMotiveRequired()) {
+        motive = DialogUtils.showMotiveInputDialog(motive);
+        if (motive == null) {
+          // annulation
+          return;
+        }
+      }
       // open ssh session
       SessionModel newSessionModel = this.sessionManager
           .openNewSession(configModel, context.getPassphrase());
+      newSessionModel.setMotive(motive);
       // start the presenter
       SessionPresenter sessionPresenter = new SessionPresenter(newView,
           newSessionModel, this.context, this.sessionManager);
@@ -213,11 +223,11 @@ public class MainPresenter implements ManagementUserEventHandler {
       this.view.showSessionView(newView);
     } catch (SessionException e) {
       this.view.removeSessionView(newView);
-      ErrorUtils.showError(
+      DialogUtils.showError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.session.create.error.message"),
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.session.create.error.title"));
+              .getViewProperty("scpbrowser.dialog.session.create.error.title"));
       LoggerUtils.error(PropertiesUtils.getViewProperty(
           "scpbrowser.dialog.session.create.error.message") + " " + configModel,
           e);
@@ -235,7 +245,7 @@ public class MainPresenter implements ManagementUserEventHandler {
           presenter.closeView();
           MainPresenter.this.view.removeSessionView(presenter.getView());
           MainPresenter.this.sessionPresenterMap
-          .remove(presenter.getSessionModel());
+              .remove(presenter.getSessionModel());
         }
       }).start();
     }
@@ -327,38 +337,38 @@ public class MainPresenter implements ManagementUserEventHandler {
   @Subscribe
   public void onDownloadEvent(DownloadEvent event) {
     switch (event.getStatus()) {
-      case RUNNING:
-        this.view.getFooterbar().addRunningDownload();
-        break;
-      case FAILURE:
-        this.view.getFooterbar().removeRunningDownload();
-        this.view.getFooterbar().addFailedDownload();
-        break;
-      case SUCCESS:
-        this.view.getFooterbar().removeRunningDownload();
-        this.view.getFooterbar().addSucceededDownload();
-        break;
-      default:
-        break;
+    case RUNNING:
+      this.view.getFooterbar().addRunningDownload();
+      break;
+    case FAILURE:
+      this.view.getFooterbar().removeRunningDownload();
+      this.view.getFooterbar().addFailedDownload();
+      break;
+    case SUCCESS:
+      this.view.getFooterbar().removeRunningDownload();
+      this.view.getFooterbar().addSucceededDownload();
+      break;
+    default:
+      break;
     }
   }
 
   @Subscribe
   public void onUploadEvent(UploadEvent event) {
     switch (event.getStatus()) {
-      case RUNNING:
-        this.view.getFooterbar().addRunningUpload();
-        break;
-      case FAILURE:
-        this.view.getFooterbar().removeRunningUpload();
-        this.view.getFooterbar().addFailedUpload();
-        break;
-      case SUCCESS:
-        this.view.getFooterbar().removeRunningUpload();
-        this.view.getFooterbar().addSucceededUpload();
-        break;
-      default:
-        break;
+    case RUNNING:
+      this.view.getFooterbar().addRunningUpload();
+      break;
+    case FAILURE:
+      this.view.getFooterbar().removeRunningUpload();
+      this.view.getFooterbar().addFailedUpload();
+      break;
+    case SUCCESS:
+      this.view.getFooterbar().removeRunningUpload();
+      this.view.getFooterbar().addSucceededUpload();
+      break;
+    default:
+      break;
     }
   }
 

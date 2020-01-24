@@ -40,6 +40,10 @@ public class ConfigUtils {
     }
   }
 
+  public static boolean isMotiveRequired() {
+    return CONFIG_FILE.getBoolean("motiveRequired", true);
+  }
+
   /**
    * @param property property key to find
    * @return the property value

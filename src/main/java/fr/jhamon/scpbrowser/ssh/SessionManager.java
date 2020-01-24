@@ -25,7 +25,7 @@ import fr.jhamon.scpbrowser.model.exception.SessionException;
 import fr.jhamon.scpbrowser.model.exception.TimeoutException;
 import fr.jhamon.scpbrowser.utils.ConfigUtils;
 import fr.jhamon.scpbrowser.utils.Constantes;
-import fr.jhamon.scpbrowser.utils.ErrorUtils;
+import fr.jhamon.scpbrowser.utils.DialogUtils;
 import fr.jhamon.scpbrowser.utils.LoggerUtils;
 import fr.jhamon.scpbrowser.utils.PropertiesUtils;
 import fr.jhamon.scpbrowser.view.ssh.JschUserInfoUI;
@@ -79,7 +79,7 @@ public class SessionManager {
    * @return
    * @throws SessionException
    */
-  public Channel openConsoleChannel(SessionModel sessionModel)
+  public Channel openConsoleChannel(SessionModel sessionModel, String motive)
       throws SessionException {
     Session session = sessionModel.getSshSession();
     if (session == null) {
@@ -95,6 +95,9 @@ public class SessionManager {
       channel.setAgentForwarding(true);
       channel.setPty(true);
       channel.setPtyType("dumb");
+      if (StringUtils.isNotBlank(motive)) {
+        channel.setEnv(Constantes.MOTIVE_ENV_VAR, motive);
+      }
       channel.setCommand(
           SessionUtils.buildSshCommand(sessionModel.getConfiguration()));
 
@@ -133,6 +136,9 @@ public class SessionManager {
       channel.setAgentForwarding(true);
       channel.setPty(true);
       // channel.setPtyType("dumb");
+      if (StringUtils.isNotBlank(sessionModel.getMotive())) {
+        channel.setEnv(Constantes.MOTIVE_ENV_VAR, sessionModel.getMotive());
+      }
       channel.setCommand(
           SessionUtils.buildSshCommand(sessionModel.getConfiguration()));
 
@@ -240,7 +246,7 @@ public class SessionManager {
         }
 
       } catch (TimeoutException e) {
-        ErrorUtils.showError(
+        DialogUtils.showError(
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.file.download.error.message", filePath),
             PropertiesUtils.getViewProperty(
@@ -304,8 +310,11 @@ public class SessionManager {
       ChannelExec channel = (ChannelExec) session.openChannel("exec");
       channel.setAgentForwarding(true);
       channel.setPty(true);
+      if (StringUtils.isNotBlank(motive)) {
+        channel.setEnv(Constantes.MOTIVE_ENV_VAR, motive);
+      }
       channel.setCommand(SessionUtils.buildScpUploadCommand(
-          sessionModel.getConfiguration(), filePath, destDir, motive));
+          sessionModel.getConfiguration(), filePath, destDir));
 
       Pair<OutputStream, InputStream> streams = Pair
           .of(channel.getOutputStream(), channel.getInputStream());
@@ -327,7 +336,7 @@ public class SessionManager {
           streams.getLeft().flush();
         }
       } catch (TimeoutException e) {
-        ErrorUtils.showError(
+        DialogUtils.showError(
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.file.upload.error.message", filePath),
             PropertiesUtils
@@ -340,14 +349,14 @@ public class SessionManager {
       cmdOutput = SessionUtils.readUntil(streams.getRight(), " \r",
           sessionModel.getConfiguration().getUploadTimeout());
       if (cmdOutput.contains("No such file or directory")) {
-        ErrorUtils.showError(PropertiesUtils.getViewProperty(
+        DialogUtils.showError(PropertiesUtils.getViewProperty(
             "scpbrowser.dialog.file.upload.error.message.notfound", filePath),
             PropertiesUtils
                 .getViewProperty("scpbrowser.dialog.file.upload.error.title"));
         throw new SessionException("File not found");
       }
       if (cmdOutput.contains("lost connection")) {
-        ErrorUtils.showError(
+        DialogUtils.showError(
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.file.upload.error.message", filePath),
             PropertiesUtils

@@ -18,7 +18,7 @@ public interface ContentEventHandler {
    *
    * @param absolutePath file path to upload
    */
-  void onUploadEvent(String absolutePath, String motive);
+  void onUploadEvent(String absolutePath);
 
   /**
    * Handle download request
@@ -47,7 +47,7 @@ public interface ContentEventHandler {
    *
    * @param content content to remove
    */
-  public void onDeleteSelectedContent(ContentModel content, String motive);
+  public void onDeleteSelectedContent(ContentModel content);
 
   /**
    * Handle content rename event
@@ -56,7 +56,7 @@ public interface ContentEventHandler {
    * @param newContent content with the new name
    */
   public void onMoveSelectedContent(ContentModel content,
-      ContentModel newContent, String motive);
+      ContentModel newContent);
 
   /**
    * Handle user paht change request
@@ -70,6 +70,6 @@ public interface ContentEventHandler {
    *
    * @param text folder to create
    */
-  void onMakeDirEvent(String text, String motive);
+  void onMakeDirEvent(String text);
 
 }

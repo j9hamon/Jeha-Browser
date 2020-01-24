@@ -2,11 +2,12 @@ package fr.jhamon.scpbrowser.model;
 
 import com.jcraft.jsch.Session;
 
+import fr.jhamon.scpbrowser.utils.Constantes;
+
 /**
  * Object containing a session configuration and the associated {@link Session}
  *
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public class SessionModel {
@@ -14,6 +15,8 @@ public class SessionModel {
   private Session sshSession;
 
   private SessionConfigModel configuration;
+
+  private String motive = null;
 
   /**
    * Create a new instance with no {@link Session}
@@ -24,6 +27,7 @@ public class SessionModel {
     super();
     this.sshSession = null;
     this.configuration = configuration;
+    this.motive = Constantes.DEFAULT_MOTIVE;
   }
 
   /**
@@ -34,6 +38,19 @@ public class SessionModel {
     super();
     this.sshSession = session;
     this.configuration = configuration;
+    this.motive = Constantes.DEFAULT_MOTIVE;
+  }
+
+  /**
+   * @param session
+   * @param configuration
+   */
+  public SessionModel(Session session, SessionConfigModel configuration,
+      String motive) {
+    super();
+    this.sshSession = session;
+    this.configuration = configuration;
+    this.motive = motive;
   }
 
   @Override
@@ -102,6 +119,14 @@ public class SessionModel {
    */
   public void setConfiguration(SessionConfigModel configuration) {
     this.configuration = configuration;
+  }
+
+  public String getMotive() {
+    return motive;
+  }
+
+  public void setMotive(String motive) {
+    this.motive = motive;
   }
 
 }

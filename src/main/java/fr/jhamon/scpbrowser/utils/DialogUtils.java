@@ -6,11 +6,20 @@ import javax.swing.SwingUtilities;
 /**
  * Utility to create error dialogs
  *
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
-public class ErrorUtils {
+public class DialogUtils {
+
+  public static String showMotiveInputDialog(String defaultMotive) {
+    return (String) JOptionPane.showInputDialog(null,
+        PropertiesUtils
+            .getViewProperty("scp.browser.dialog.content.input.motive.message"),
+        PropertiesUtils
+            .getViewProperty("scp.browser.dialog.content.input.motive.title"),
+        JOptionPane.PLAIN_MESSAGE, null, null,
+        defaultMotive != null ? defaultMotive : "");
+  }
 
   /**
    * Open a new dialog. Close the application on close

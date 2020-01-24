@@ -119,14 +119,8 @@ public class SessionPanel extends JPanel implements SessionView {
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (dialogCode == JOptionPane.OK_OPTION
                 && !StringUtils.isBlank(fileNameField.getText())) {
-              final String motive = (String) JOptionPane.showInputDialog(null,
-                  PropertiesUtils.getViewProperty(
-                      "scp.browser.dialog.content.input.motive.message"),
-                  PropertiesUtils.getViewProperty(
-                      "scp.browser.dialog.content.input.motive.title"),
-                  JOptionPane.PLAIN_MESSAGE);
               SessionPanel.this.eventHandler
-                  .onMakeDirEvent(fileNameField.getText(), motive);
+                  .onMakeDirEvent(fileNameField.getText());
             }
           }
         });
@@ -240,18 +234,11 @@ public class SessionPanel extends JPanel implements SessionView {
         int returnVal = uploadFileChooser.showDialog(null, PropertiesUtils
             .getViewProperty("scpbrowser.dialog.filechooser.button.upload"));
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-          final String motive = (String) JOptionPane.showInputDialog(null,
-              PropertiesUtils.getViewProperty(
-                  "scp.browser.dialog.content.input.motive.message"),
-              PropertiesUtils.getViewProperty(
-                  "scp.browser.dialog.content.input.motive.title"),
-              JOptionPane.PLAIN_MESSAGE);
           new Thread(new Runnable() {
             @Override
             public void run() {
               eventHandler.onUploadEvent(
-                  uploadFileChooser.getSelectedFile().getAbsolutePath(),
-                  motive);
+                  uploadFileChooser.getSelectedFile().getAbsolutePath());
             }
           }).start();
         }

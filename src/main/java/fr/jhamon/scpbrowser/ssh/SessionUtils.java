@@ -80,8 +80,7 @@ public class SessionUtils {
    * @return the shell command
    */
   public static String buildScpUploadCommand(
-      SessionConfigModel sessionConfModel, String filePath, String destDir,
-      String motive) {
+      SessionConfigModel sessionConfModel, String filePath, String destDir) {
     StringBuilder builder = new StringBuilder("scp#")
         .append(ConfigUtils.getConfigProperty("racf")).append(":")
         .append(filePath).append(" ").append(sessionConfModel.getUsername())

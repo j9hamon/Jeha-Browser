@@ -10,7 +10,7 @@ import com.alee.laf.WebLookAndFeel;
 
 import fr.jhamon.scpbrowser.presenter.MainPresenter;
 import fr.jhamon.scpbrowser.utils.Constantes;
-import fr.jhamon.scpbrowser.utils.ErrorUtils;
+import fr.jhamon.scpbrowser.utils.DialogUtils;
 import fr.jhamon.scpbrowser.utils.LoggerUtils;
 import fr.jhamon.scpbrowser.utils.PropertiesUtils;
 import fr.jhamon.scpbrowser.view.component.MainView;
@@ -36,7 +36,7 @@ public class ScpBrowser {
       try {
         knownHostFile.createNewFile();
       } catch (IOException e) {
-        ErrorUtils.showFatalError(
+        DialogUtils.showFatalError(
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.init.knownhosts.creation.message"),
             PropertiesUtils.getViewProperty(

@@ -7,13 +7,12 @@ import javax.swing.ImageIcon;
 /**
  * Application constantes
  *
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public final class Constantes {
 
-  public static final String VERSION = "v:1.4.3";
+  public static final String VERSION = "v:1.5.0";
 
   public static final int CONSOLE_MAX_CHARACTERS = 1000;
 
@@ -40,6 +39,10 @@ public final class Constantes {
   public static final int TIMEOUT_UPLOAD = 2500;
   public static final int TIMEOUT_CONNECT = 2500;
   public static final int TIMEOUT_COMMAND = 2500;
+
+  public static final String DEFAULT_MOTIVE = "NO_COMMENT";
+
+  public static final String MOTIVE_ENV_VAR = null; // TODO
 
   private Constantes() {
   }
