@@ -18,8 +18,7 @@ import fr.jhamon.scpbrowser.utils.TransferUtils;
 /**
  * Utility class for sessions
  *
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public class SessionUtils {
@@ -62,7 +61,8 @@ public class SessionUtils {
    * @return the shell command
    */
   public static String buildScpDownloadCommand(
-      SessionConfigModel sessionConfModel, String filePath, String destFilePath) {
+      SessionConfigModel sessionConfModel, String filePath,
+      String destFilePath) {
     StringBuilder builder = new StringBuilder("scp#")
         .append(sessionConfModel.getUsername()).append("@")
         .append(sessionConfModel.getServer()).append(":").append(filePath)
@@ -80,7 +80,8 @@ public class SessionUtils {
    * @return the shell command
    */
   public static String buildScpUploadCommand(
-      SessionConfigModel sessionConfModel, String filePath, String destDir) {
+      SessionConfigModel sessionConfModel, String filePath, String destDir,
+      String motive) {
     StringBuilder builder = new StringBuilder("scp#")
         .append(ConfigUtils.getConfigProperty("racf")).append(":")
         .append(filePath).append(" ").append(sessionConfModel.getUsername())
@@ -112,7 +113,7 @@ public class SessionUtils {
    * @return the read string
    * @throws InterruptedException
    * @throws IOException
-   * @throws TimeoutException     thrown if time limit is exceeded
+   * @throws TimeoutException          thrown if time limit is exceeded
    * @throws ConnectionClosedException
    */
   public static String readUntil(InputStream stream, String endOfCmdPattern,
@@ -154,7 +155,7 @@ public class SessionUtils {
    * @return true if the pattern is found
    * @throws InterruptedException
    * @throws IOException
-   * @throws TimeoutException     thrown if time limit is exceeded
+   * @throws TimeoutException          thrown if time limit is exceeded
    * @throws ConnectionClosedException
    */
   public static boolean waitFor(InputStream stream, String endOfCmdPattern,

@@ -94,8 +94,25 @@ public class FooterBar extends JPanel {
           Desktop.getDesktop().browse(
               new URL("https://github.com/j9hamon/Jeha-Browser/releases")
                   .toURI());
-        } catch (IOException | UnsupportedOperationException | SecurityException
-            | URISyntaxException ex) {
+        } catch (IOException ex) {
+          JOptionPane.showMessageDialog(null,
+              PropertiesUtils.getViewProperty("scpbrowser.dialog.about.message",
+                  Constantes.VERSION),
+              PropertiesUtils.getViewProperty("scpbrowser.dialog.about.title"),
+              JOptionPane.INFORMATION_MESSAGE);
+        } catch (UnsupportedOperationException ex) {
+          JOptionPane.showMessageDialog(null,
+              PropertiesUtils.getViewProperty("scpbrowser.dialog.about.message",
+                  Constantes.VERSION),
+              PropertiesUtils.getViewProperty("scpbrowser.dialog.about.title"),
+              JOptionPane.INFORMATION_MESSAGE);
+        } catch (SecurityException ex) {
+          JOptionPane.showMessageDialog(null,
+              PropertiesUtils.getViewProperty("scpbrowser.dialog.about.message",
+                  Constantes.VERSION),
+              PropertiesUtils.getViewProperty("scpbrowser.dialog.about.title"),
+              JOptionPane.INFORMATION_MESSAGE);
+        } catch (URISyntaxException ex) {
           JOptionPane.showMessageDialog(null,
               PropertiesUtils.getViewProperty("scpbrowser.dialog.about.message",
                   Constantes.VERSION),

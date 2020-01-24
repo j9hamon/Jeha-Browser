@@ -55,14 +55,32 @@ public class TransferTable extends JTable {
           @Override
           public void actionPerformed(ActionEvent e) {
             if (TransferTable.this.getSelectedRow() != -1) {
-              TransferModel transfer = ((TransferTableModel) TransferTable.this.getModel()).getContentAt(TransferTable.this.getSelectedRow());
+              TransferModel transfer = ((TransferTableModel) TransferTable.this
+                  .getModel())
+                      .getContentAt(TransferTable.this.getSelectedRow());
               try {
                 Desktop.getDesktop().open(new File(transfer.getLocalDir()));
-              } catch (IOException | UnsupportedOperationException | SecurityException ex) {
-                ErrorUtils.showError(PropertiesUtils.getViewProperty(
-                    "scpbrowser.dialog.explorer.open.error.message", transfer.getLocalDir()),
-                    PropertiesUtils
-                    .getViewProperty("scpbrowser.dialog.explorer.open.error.title"));
+              } catch (IOException ex) {
+                ErrorUtils.showError(
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.open.error.message",
+                        transfer.getLocalDir()),
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.open.error.title"));
+              } catch (UnsupportedOperationException ex) {
+                ErrorUtils.showError(
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.open.error.message",
+                        transfer.getLocalDir()),
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.open.error.title"));
+              } catch (SecurityException ex) {
+                ErrorUtils.showError(
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.open.error.message",
+                        transfer.getLocalDir()),
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.open.error.title"));
               }
             }
           }
@@ -76,14 +94,33 @@ public class TransferTable extends JTable {
           @Override
           public void actionPerformed(ActionEvent e) {
             if (TransferTable.this.getSelectedRow() != -1) {
-              TransferModel transfer = ((TransferTableModel) TransferTable.this.getModel()).getContentAt(TransferTable.this.getSelectedRow());
+              TransferModel transfer = ((TransferTableModel) TransferTable.this
+                  .getModel())
+                      .getContentAt(TransferTable.this.getSelectedRow());
               try {
-                Desktop.getDesktop().browse(Paths.get(transfer.getLocalDir()).getParent().toUri());
-              } catch (IOException | UnsupportedOperationException | SecurityException ex) {
-                ErrorUtils.showError(PropertiesUtils.getViewProperty(
-                    "scpbrowser.dialog.explorer.browse.error.message", transfer.getLocalDir()),
-                    PropertiesUtils
-                    .getViewProperty("scpbrowser.dialog.explorer.browse.error.title"));
+                Desktop.getDesktop().browse(
+                    Paths.get(transfer.getLocalDir()).getParent().toUri());
+              } catch (IOException ex) {
+                ErrorUtils.showError(
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.browse.error.message",
+                        transfer.getLocalDir()),
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.browse.error.title"));
+              } catch (UnsupportedOperationException ex) {
+                ErrorUtils.showError(
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.browse.error.message",
+                        transfer.getLocalDir()),
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.browse.error.title"));
+              } catch (SecurityException ex) {
+                ErrorUtils.showError(
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.browse.error.message",
+                        transfer.getLocalDir()),
+                    PropertiesUtils.getViewProperty(
+                        "scpbrowser.dialog.explorer.browse.error.title"));
               }
             }
           }
@@ -107,6 +144,5 @@ public class TransferTable extends JTable {
       this.setComponentPopupMenu(null);
     }
   }
-
 
 }

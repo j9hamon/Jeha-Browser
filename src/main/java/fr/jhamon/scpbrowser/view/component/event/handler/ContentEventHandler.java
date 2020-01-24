@@ -8,8 +8,7 @@ import fr.jhamon.scpbrowser.model.FileModel;
 /**
  * Handler interface to manage the user action related to content
  *
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public interface ContentEventHandler {
@@ -19,11 +18,12 @@ public interface ContentEventHandler {
    *
    * @param absolutePath file path to upload
    */
-  void onUploadEvent(String absolutePath);
+  void onUploadEvent(String absolutePath, String motive);
+
   /**
    * Handle download request
    *
-   * @param fileToDownload file to download
+   * @param fileToDownload  file to download
    * @param destinationFile destination
    */
   void onDownloadEvent(FileModel fileToDownload, File destinationFile);
@@ -47,15 +47,16 @@ public interface ContentEventHandler {
    *
    * @param content content to remove
    */
-  public void onDeleteSelectedContent(ContentModel content);
+  public void onDeleteSelectedContent(ContentModel content, String motive);
 
   /**
    * Handle content rename event
    *
-   * @param content content to move
+   * @param content    content to move
    * @param newContent content with the new name
    */
-  public void onMoveSelectedContent(ContentModel content, ContentModel newContent);
+  public void onMoveSelectedContent(ContentModel content,
+      ContentModel newContent, String motive);
 
   /**
    * Handle user paht change request
@@ -69,6 +70,6 @@ public interface ContentEventHandler {
    *
    * @param text folder to create
    */
-  void onMakeDirEvent(String text);
+  void onMakeDirEvent(String text, String motive);
 
 }

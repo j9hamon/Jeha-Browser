@@ -33,8 +33,7 @@ import fr.jhamon.scpbrowser.view.ssh.JschUserInfoUI;
 /**
  * manager used to handle ssh sessions
  *
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public class SessionManager {
@@ -151,7 +150,7 @@ public class SessionManager {
             .isBlank(sessionModel.getConfiguration().getPassword())) {
           // send app password
           streams.getLeft()
-          .write(sessionModel.getConfiguration().getPassword().getBytes());
+              .write(sessionModel.getConfiguration().getPassword().getBytes());
           streams.getLeft().write('\n');
           streams.getLeft().flush();
         }
@@ -195,8 +194,8 @@ public class SessionManager {
    * @return
    * @throws SessionException if download fails
    */
-  public void downloadFile(SessionModel sessionModel, String filePath, File destination)
-      throws SessionException {
+  public void downloadFile(SessionModel sessionModel, String filePath,
+      File destination) throws SessionException {
     Session session = sessionModel.getSshSession();
     if (session == null) {
       throw new SessionException("No session created for config "
@@ -207,16 +206,18 @@ public class SessionManager {
     }
 
     try {
-      if (destination!=null && destination.getParentFile() != null && !destination.getParentFile().exists()) {
+      if (destination != null && destination.getParentFile() != null
+          && !destination.getParentFile().exists()) {
         destination.getParentFile().mkdirs();
       }
       ChannelExec channel = (ChannelExec) session.openChannel("exec");
       channel.setAgentForwarding(true);
       channel.setPty(true);
 
-      String dlDestination = destination != null ? destination.getAbsolutePath() : ConfigUtils.getDownloadDirectory();
-      channel.setCommand(SessionUtils.buildScpDownloadCommand(sessionModel.getConfiguration(), filePath,
-          dlDestination));
+      String dlDestination = destination != null ? destination.getAbsolutePath()
+          : ConfigUtils.getDownloadDirectory();
+      channel.setCommand(SessionUtils.buildScpDownloadCommand(
+          sessionModel.getConfiguration(), filePath, dlDestination));
 
       Pair<OutputStream, InputStream> streams = Pair
           .of(channel.getOutputStream(), channel.getInputStream());
@@ -233,7 +234,7 @@ public class SessionManager {
             .isBlank(sessionModel.getConfiguration().getPassword())) {
           // send app password
           streams.getLeft()
-          .write(sessionModel.getConfiguration().getPassword().getBytes());
+              .write(sessionModel.getConfiguration().getPassword().getBytes());
           streams.getLeft().write('\n');
           streams.getLeft().flush();
         }
@@ -260,8 +261,13 @@ public class SessionManager {
       }
       channel.disconnect();
       return;
-    } catch (JSchException | IOException | InterruptedException
-        | TimeoutException e) {
+    } catch (JSchException e) {
+      throw new SessionException(e);
+    } catch (IOException e) {
+      throw new SessionException(e);
+    } catch (InterruptedException e) {
+      throw new SessionException(e);
+    } catch (TimeoutException e) {
       throw new SessionException(e);
     }
   }
@@ -276,7 +282,7 @@ public class SessionManager {
    * @throws SessionException if upload fails
    */
   public void uploadFile(SessionModel sessionModel, String filePath,
-      String destDir) throws SessionException {
+      String destDir, String motive) throws SessionException {
     Session session = sessionModel.getSshSession();
     if (session == null) {
       throw new SessionException("No session created for config "
@@ -299,7 +305,7 @@ public class SessionManager {
       channel.setAgentForwarding(true);
       channel.setPty(true);
       channel.setCommand(SessionUtils.buildScpUploadCommand(
-          sessionModel.getConfiguration(), filePath, destDir));
+          sessionModel.getConfiguration(), filePath, destDir, motive));
 
       Pair<OutputStream, InputStream> streams = Pair
           .of(channel.getOutputStream(), channel.getInputStream());
@@ -316,7 +322,7 @@ public class SessionManager {
             .isBlank(sessionModel.getConfiguration().getPassword())) {
           // send app password
           streams.getLeft()
-          .write(sessionModel.getConfiguration().getPassword().getBytes());
+              .write(sessionModel.getConfiguration().getPassword().getBytes());
           streams.getLeft().write('\n');
           streams.getLeft().flush();
         }
@@ -325,7 +331,7 @@ public class SessionManager {
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.file.upload.error.message", filePath),
             PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.file.upload.error.title"));
+                .getViewProperty("scpbrowser.dialog.file.upload.error.title"));
         LoggerUtils.error(PropertiesUtils.getViewProperty(
             "scpbrowser.dialog.file.upload.error.message", filePath), e);
       }
@@ -337,7 +343,7 @@ public class SessionManager {
         ErrorUtils.showError(PropertiesUtils.getViewProperty(
             "scpbrowser.dialog.file.upload.error.message.notfound", filePath),
             PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.file.upload.error.title"));
+                .getViewProperty("scpbrowser.dialog.file.upload.error.title"));
         throw new SessionException("File not found");
       }
       if (cmdOutput.contains("lost connection")) {
@@ -345,7 +351,7 @@ public class SessionManager {
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.file.upload.error.message", filePath),
             PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.file.upload.error.title"));
+                .getViewProperty("scpbrowser.dialog.file.upload.error.title"));
         throw new SessionException("Connection lost");
       }
 
@@ -355,8 +361,13 @@ public class SessionManager {
 
       channel.disconnect();
       return;
-    } catch (JSchException | IOException | InterruptedException
-        | TimeoutException e) {
+    } catch (JSchException e) {
+      throw new SessionException(e);
+    } catch (IOException e) {
+      throw new SessionException(e);
+    } catch (InterruptedException e) {
+      throw new SessionException(e);
+    } catch (TimeoutException e) {
       throw new SessionException(e);
     }
   }

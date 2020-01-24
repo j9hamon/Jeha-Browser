@@ -48,8 +48,7 @@ import fr.jhamon.scpbrowser.view.component.impl.ConsoleFrame;
 /**
  * Presenter for a session view
  *
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public class SessionPresenter implements ContentEventHandler {
@@ -152,13 +151,21 @@ public class SessionPresenter implements ContentEventHandler {
         };
         this.consoleView = new ConsoleFrame();
         this.consoleView
-        .setTitle(this.sessionModel.getConfiguration().getUsername() + "@"
-            + this.sessionModel.getConfiguration().getServer());
+            .setTitle(this.sessionModel.getConfiguration().getUsername() + "@"
+                + this.sessionModel.getConfiguration().getServer());
         this.consoleView.start(connection);
 
         LoggerUtils.debug("Console view opened for "
             + this.getSessionModel().getConfiguration());
-      } catch (IOException | SessionException e) {
+      } catch (IOException e) {
+        LoggerUtils.error("Failed to open console view for "
+            + sessionModel.getConfiguration(), e);
+        ErrorUtils.showError(
+            PropertiesUtils.getViewProperty(
+                "scpbrowser.dialog.action.console.error.message"),
+            PropertiesUtils.getViewProperty(
+                "scpbrowser.dialog.action.console.error.title"));
+      } catch (SessionException e) {
         LoggerUtils.error("Failed to open console view for "
             + sessionModel.getConfiguration(), e);
         ErrorUtils.showError(
@@ -175,7 +182,7 @@ public class SessionPresenter implements ContentEventHandler {
    */
   public void closeView() {
     LoggerUtils
-    .debug("Closing console view for " + sessionModel.getConfiguration());
+        .debug("Closing console view for " + sessionModel.getConfiguration());
     try {
       contentStreams.getLeft().close();
       contentStreams.getRight().close();
@@ -195,16 +202,16 @@ public class SessionPresenter implements ContentEventHandler {
    */
   public void getCurrentDirectory() {
     LoggerUtils
-    .debug("Request current path " + sessionModel.getConfiguration());
+        .debug("Request current path " + sessionModel.getConfiguration());
     try {
       // clear streams
       if (this.contentStreams.getRight().available() > 0) {
         this.contentStreams.getRight()
-        .skip(this.contentStreams.getRight().available());
+            .skip(this.contentStreams.getRight().available());
       }
       // send pwd command
       this.contentStreams.getLeft()
-      .write(SessionUtils.SHELL_PATH_CMD.getBytes());
+          .write(SessionUtils.SHELL_PATH_CMD.getBytes());
       this.contentStreams.getLeft().flush();
 
       // get the command output
@@ -218,12 +225,30 @@ public class SessionPresenter implements ContentEventHandler {
         this.currentDir = matcher.group(1);
         this.view.setPath(currentDir);
       }
-    } catch (IOException | InterruptedException | TimeoutException e) {
+    } catch (IOException e) {
       ErrorUtils.showError(
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.action.path.error.message"),
+              .getViewProperty("scpbrowser.dialog.action.path.error.message"),
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.action.path.error.title"));
+              .getViewProperty("scpbrowser.dialog.action.path.error.title"));
+      LoggerUtils.error(PropertiesUtils
+          .getViewProperty("scpbrowser.dialog.action.path.error.message") + " "
+          + sessionModel.getConfiguration(), e);
+    } catch (InterruptedException e) {
+      ErrorUtils.showError(
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.path.error.message"),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.path.error.title"));
+      LoggerUtils.error(PropertiesUtils
+          .getViewProperty("scpbrowser.dialog.action.path.error.message") + " "
+          + sessionModel.getConfiguration(), e);
+    } catch (TimeoutException e) {
+      ErrorUtils.showError(
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.path.error.message"),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.path.error.title"));
       LoggerUtils.error(PropertiesUtils
           .getViewProperty("scpbrowser.dialog.action.path.error.message") + " "
           + sessionModel.getConfiguration(), e);
@@ -235,16 +260,16 @@ public class SessionPresenter implements ContentEventHandler {
    */
   public void refreshContent() {
     LoggerUtils
-    .debug("Refresh current directory " + sessionModel.getConfiguration());
+        .debug("Refresh current directory " + sessionModel.getConfiguration());
     try {
       // clear streams
       if (this.contentStreams.getRight().available() > 0) {
         this.contentStreams.getRight()
-        .skip(this.contentStreams.getRight().available());
+            .skip(this.contentStreams.getRight().available());
       }
       // send ls command
       this.contentStreams.getLeft()
-      .write(SessionUtils.SHELL_LIST_CMD.getBytes());
+          .write(SessionUtils.SHELL_LIST_CMD.getBytes());
       this.contentStreams.getLeft().flush();
 
       // get command output
@@ -290,12 +315,30 @@ public class SessionPresenter implements ContentEventHandler {
       }
       // refresh view
       this.getView().getContentTable().setContent(contentList);
-    } catch (IOException | InterruptedException | TimeoutException e) {
+    } catch (IOException e) {
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.action.refresh.error.message"),
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.action.refresh.error.title"));
+              .getViewProperty("scpbrowser.dialog.action.refresh.error.title"));
+      LoggerUtils.error(PropertiesUtils
+          .getViewProperty("scpbrowser.dialog.action.refresh.error.message")
+          + " " + sessionModel.getConfiguration(), e);
+    } catch (InterruptedException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.refresh.error.message"),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.refresh.error.title"));
+      LoggerUtils.error(PropertiesUtils
+          .getViewProperty("scpbrowser.dialog.action.refresh.error.message")
+          + " " + sessionModel.getConfiguration(), e);
+    } catch (TimeoutException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.refresh.error.message"),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.refresh.error.title"));
       LoggerUtils.error(PropertiesUtils
           .getViewProperty("scpbrowser.dialog.action.refresh.error.message")
           + " " + sessionModel.getConfiguration(), e);
@@ -341,25 +384,43 @@ public class SessionPresenter implements ContentEventHandler {
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.action.move.error.message.notfound", path),
             PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.action.move.error.title"));
+                .getViewProperty("scpbrowser.dialog.action.move.error.title"));
       } else if (cmdOutput.contains("Permission denied")) {
         success = false;
         ErrorUtils.showError(
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.action.move.error.message.permission", path),
             PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.action.move.error.title"));
+                .getViewProperty("scpbrowser.dialog.action.move.error.title"));
       }
       this.getCurrentDirectory();
       if (success) {
         this.refreshContent();
       }
-    } catch (IOException | InterruptedException | TimeoutException e) {
+    } catch (IOException e) {
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.action.move.error.message", path),
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.action.move.error.title"));
+              .getViewProperty("scpbrowser.dialog.action.move.error.title"));
+      LoggerUtils.error(PropertiesUtils
+          .getViewProperty("scpbrowser.dialog.action.move.error.message", path)
+          + " " + sessionModel.getConfiguration());
+    } catch (InterruptedException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.move.error.message", path),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.move.error.title"));
+      LoggerUtils.error(PropertiesUtils
+          .getViewProperty("scpbrowser.dialog.action.move.error.message", path)
+          + " " + sessionModel.getConfiguration());
+    } catch (TimeoutException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.move.error.message", path),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.move.error.title"));
       LoggerUtils.error(PropertiesUtils
           .getViewProperty("scpbrowser.dialog.action.move.error.message", path)
           + " " + sessionModel.getConfiguration());
@@ -379,28 +440,32 @@ public class SessionPresenter implements ContentEventHandler {
 
     FileModel fileDest;
     if (destination != null) {
-      fileDest = new FileModel(destination.getName(), destination.getParentFile().getAbsolutePath().replace('\\', '/'), null, 0, null);
+      fileDest = new FileModel(destination.getName(),
+          destination.getParentFile().getAbsolutePath().replace('\\', '/'),
+          null, 0, null);
     } else {
-      fileDest = new FileModel(file.getName(), ConfigUtils.getDownloadDirectory(), null, 0, null);
+      fileDest = new FileModel(file.getName(),
+          ConfigUtils.getDownloadDirectory(), null, 0, null);
     }
     try {
-      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file, fileDest,
-          TransferEvent.Status.RUNNING));
-      this.sessionManager.downloadFile(this.sessionModel, file.getFullPath(), destination);
+      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file,
+          fileDest, TransferEvent.Status.RUNNING));
+      this.sessionManager.downloadFile(this.sessionModel, file.getFullPath(),
+          destination);
 
       if (!(new File(fileDest.getFullPath()).exists())) {
         throw new SessionException("Erreur de telechargement.");
       }
-      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file, fileDest,
-          TransferEvent.Status.SUCCESS));
+      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file,
+          fileDest, TransferEvent.Status.SUCCESS));
     } catch (SessionException e) {
-      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file, fileDest,
-          TransferEvent.Status.FAILURE));
+      MainEventBus.getInstance().post(new DownloadEvent(downloadId, file,
+          fileDest, TransferEvent.Status.FAILURE));
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.file.download.error.message", file.getName()),
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.file.download.error.title"));
+              .getViewProperty("scpbrowser.dialog.file.download.error.title"));
       LoggerUtils.error(PropertiesUtils.getViewProperty(
           "scpbrowser.dialog.file.download.error.message", file.getName()) + " "
           + sessionModel.getConfiguration());
@@ -440,34 +505,35 @@ public class SessionPresenter implements ContentEventHandler {
   }
 
   @Override
-  public void onUploadEvent(String absolutePath) {
+  public void onUploadEvent(String absolutePath, String motive) {
     LoggerUtils.debug(String.format("Uploading %s to %s for %s", absolutePath,
         this.currentDir, sessionModel.getConfiguration()));
 
     long uploadId = TransferUtils.getUniqueId();
     File file = new File(absolutePath);
-    FileModel fileSrc = new FileModel(file.getName(), file.getParentFile().getAbsolutePath(),
-        null, file.length(), null);
+    FileModel fileSrc = new FileModel(file.getName(),
+        file.getParentFile().getAbsolutePath(), null, file.length(), null);
 
-    FileModel fileDest = new FileModel(file.getName(), this.currentDir, null, 0, null);
+    FileModel fileDest = new FileModel(file.getName(), this.currentDir, null, 0,
+        null);
     try {
-      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileSrc, fileDest,
-          TransferEvent.Status.RUNNING));
+      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileSrc,
+          fileDest, TransferEvent.Status.RUNNING));
 
       this.sessionManager.uploadFile(this.sessionModel, absolutePath,
-          this.currentDir);
-      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileSrc, fileDest,
-          TransferEvent.Status.SUCCESS));
+          this.currentDir, motive);
+      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileSrc,
+          fileDest, TransferEvent.Status.SUCCESS));
       this.refreshContent();
 
     } catch (SessionException e) {
-      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileSrc, fileDest,
-          TransferEvent.Status.FAILURE));
+      MainEventBus.getInstance().post(new UploadEvent(uploadId, fileSrc,
+          fileDest, TransferEvent.Status.FAILURE));
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.file.upload.error.message", absolutePath),
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.file.upload.error.title"));
+              .getViewProperty("scpbrowser.dialog.file.upload.error.title"));
       LoggerUtils.error(String.format("Upload %s to %s failed for %s",
           absolutePath, this.currentDir, sessionModel.getConfiguration()));
     }
@@ -479,14 +545,14 @@ public class SessionPresenter implements ContentEventHandler {
   }
 
   @Override
-  public void onMakeDirEvent(String text) {
+  public void onMakeDirEvent(String text, String motive) {
     LoggerUtils.debug(String.format("Creating directory %s in %s for %s", text,
         this.currentDir, sessionModel.getConfiguration()));
     try {
       // clear streams
       if (this.contentStreams.getRight().available() > 0) {
         this.contentStreams.getRight()
-        .skip(this.contentStreams.getRight().available());
+            .skip(this.contentStreams.getRight().available());
       }
       // send mkdir command
       this.contentStreams.getLeft().write(("mkdir " + text + "\n").getBytes());
@@ -495,19 +561,36 @@ public class SessionPresenter implements ContentEventHandler {
       SessionUtils.waitFor(this.contentStreams.getRight(), endOfCmdPattern,
           this.sessionModel.getConfiguration().getCommandTimeout());
 
-    } catch (IOException | InterruptedException | TimeoutException e) {
+    } catch (IOException e) {
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.action.mkdir.error.message", text),
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.action.mkdir.error.title"));
+              .getViewProperty("scpbrowser.dialog.action.mkdir.error.title"));
+      LoggerUtils.error(String.format("MakeDir %s in %s failed for %s", text,
+          this.currentDir, sessionModel.getConfiguration()));
+    } catch (InterruptedException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.mkdir.error.message", text),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.mkdir.error.title"));
+      LoggerUtils.error(String.format("MakeDir %s in %s failed for %s", text,
+          this.currentDir, sessionModel.getConfiguration()));
+    } catch (TimeoutException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.mkdir.error.message", text),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.mkdir.error.title"));
       LoggerUtils.error(String.format("MakeDir %s in %s failed for %s", text,
           this.currentDir, sessionModel.getConfiguration()));
     }
   }
 
   @Override
-  public void onDownloadSelectedContent(ContentModel content, boolean sameName) {
+  public void onDownloadSelectedContent(ContentModel content,
+      boolean sameName) {
     if (content != null) {
       if (content instanceof FileModel) {
         if (sameName) {
@@ -519,88 +602,140 @@ public class SessionPresenter implements ContentEventHandler {
         ErrorUtils.showError(
             PropertiesUtils.getViewProperty(
                 "scpbrowser.dialog.file.download.folder.error.message"),
-            PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.file.download.error.title"));
+            PropertiesUtils.getViewProperty(
+                "scpbrowser.dialog.file.download.error.title"));
       }
     }
   }
 
   @Override
-  public void onDeleteSelectedContent(ContentModel content) {
-    LoggerUtils.debug(String.format("Remove content %s in %s for %s", content.getName(),
-        this.currentDir, sessionModel.getConfiguration()));
+  public void onDeleteSelectedContent(ContentModel content, String motive) {
+    LoggerUtils.debug(String.format("Remove content %s in %s for %s",
+        content.getName(), this.currentDir, sessionModel.getConfiguration()));
     try {
       // clear streams
       if (this.contentStreams.getRight().available() > 0) {
         this.contentStreams.getRight()
-        .skip(this.contentStreams.getRight().available());
+            .skip(this.contentStreams.getRight().available());
       }
       // send mkdir command
       if (content instanceof FolderModel) {
-        this.contentStreams.getLeft().write(("rm -r " + ((FolderModel)content).getFullPath() + "\n").getBytes());
+        this.contentStreams.getLeft()
+            .write(("rm -r " + ((FolderModel) content).getFullPath() + "\n")
+                .getBytes());
       } else {
-        this.contentStreams.getLeft().write(("rm " + ((FileModel)content).getFullPath() + "\n").getBytes());
+        this.contentStreams.getLeft().write(
+            ("rm " + ((FileModel) content).getFullPath() + "\n").getBytes());
       }
       this.contentStreams.getLeft().flush();
       // wait for command execution
-      String result = SessionUtils.readUntil(this.contentStreams.getRight(), endOfCmdPattern,
+      String result = SessionUtils.readUntil(this.contentStreams.getRight(),
+          endOfCmdPattern,
           this.sessionModel.getConfiguration().getCommandTimeout());
       if (result.contains("rm: cannot")) {
         ErrorUtils.showError(
             PropertiesUtils.getViewProperty(
-                "scpbrowser.dialog.file.remove.error.message", content.getFullPath()),
+                "scpbrowser.dialog.file.remove.error.message",
+                content.getFullPath()),
             PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.file.remove.error.title"));
+                .getViewProperty("scpbrowser.dialog.file.remove.error.title"));
       }
 
       refreshContent();
-    } catch (IOException | InterruptedException | TimeoutException e) {
+    } catch (IOException e) {
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
               "scpbrowser.dialog.action.rm.error.message", content.getName()),
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.action.rm.error.title"));
-      LoggerUtils.error(String.format("rm %s in %s failed for %s", content.getFullPath(),
-          this.currentDir, sessionModel.getConfiguration()));
+              .getViewProperty("scpbrowser.dialog.action.rm.error.title"));
+      LoggerUtils.error(
+          String.format("rm %s in %s failed for %s", content.getFullPath(),
+              this.currentDir, sessionModel.getConfiguration()));
+    } catch (InterruptedException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.rm.error.message", content.getName()),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.rm.error.title"));
+      LoggerUtils.error(
+          String.format("rm %s in %s failed for %s", content.getFullPath(),
+              this.currentDir, sessionModel.getConfiguration()));
+    } catch (TimeoutException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.rm.error.message", content.getName()),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.rm.error.title"));
+      LoggerUtils.error(
+          String.format("rm %s in %s failed for %s", content.getFullPath(),
+              this.currentDir, sessionModel.getConfiguration()));
     }
   }
 
   @Override
-  public void onMoveSelectedContent(ContentModel content, ContentModel newContent) {
-    LoggerUtils.debug(String.format("Move content %s in %s to %s for %s", content.getName(),
-        this.currentDir, newContent.getFullPath(), sessionModel.getConfiguration()));
+  public void onMoveSelectedContent(ContentModel content,
+      ContentModel newContent, String motive) {
+    LoggerUtils.debug(String.format("Move content %s in %s to %s for %s",
+        content.getName(), this.currentDir, newContent.getFullPath(),
+        sessionModel.getConfiguration()));
     try {
       // clear streams
       if (this.contentStreams.getRight().available() > 0) {
         this.contentStreams.getRight()
-        .skip(this.contentStreams.getRight().available());
+            .skip(this.contentStreams.getRight().available());
       }
       // send mkdir command
       if (content instanceof FolderModel) {
-        this.contentStreams.getLeft().write(("mv -r" + ((FolderModel)content).getFullPath() + " " + newContent.getFullPath() + "\n").getBytes());
+        this.contentStreams.getLeft()
+            .write(("mv -r" + ((FolderModel) content).getFullPath() + " "
+                + newContent.getFullPath() + "\n").getBytes());
       } else {
-        this.contentStreams.getLeft().write(("mv " + ((FileModel)content).getFullPath() + " " + newContent.getFullPath() + "\n").getBytes());
+        this.contentStreams.getLeft()
+            .write(("mv " + ((FileModel) content).getFullPath() + " "
+                + newContent.getFullPath() + "\n").getBytes());
       }
       this.contentStreams.getLeft().flush();
       // wait for command execution
-      String result = SessionUtils.readUntil(this.contentStreams.getRight(), endOfCmdPattern,
+      String result = SessionUtils.readUntil(this.contentStreams.getRight(),
+          endOfCmdPattern,
           this.sessionModel.getConfiguration().getCommandTimeout());
       if (result.contains("mv: cannot")) {
-        ErrorUtils.showError(
-            PropertiesUtils.getViewProperty(
-                "scpbrowser.dialog.file.move.error.message", content.getFullPath()),
+        ErrorUtils.showError(PropertiesUtils.getViewProperty(
+            "scpbrowser.dialog.file.move.error.message", content.getFullPath()),
             PropertiesUtils
-            .getViewProperty("scpbrowser.dialog.file.move.error.title"));
+                .getViewProperty("scpbrowser.dialog.file.move.error.title"));
       }
       refreshContent();
-    } catch (IOException | InterruptedException | TimeoutException e) {
+    } catch (IOException e) {
       ErrorUtils.showError(
           PropertiesUtils.getViewProperty(
-              "scpbrowser.dialog.action.mv.error.message", content.getFullPath(), newContent.getFullPath()),
+              "scpbrowser.dialog.action.mv.error.message",
+              content.getFullPath(), newContent.getFullPath()),
           PropertiesUtils
-          .getViewProperty("scpbrowser.dialog.action.mv.error.title"));
-      LoggerUtils.error(String.format("mv %s to %s failed for %s", content.getFullPath(),
-          newContent.getFullPath(), sessionModel.getConfiguration()));
+              .getViewProperty("scpbrowser.dialog.action.mv.error.title"));
+      LoggerUtils.error(
+          String.format("mv %s to %s failed for %s", content.getFullPath(),
+              newContent.getFullPath(), sessionModel.getConfiguration()));
+    } catch (InterruptedException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.mv.error.message",
+              content.getFullPath(), newContent.getFullPath()),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.mv.error.title"));
+      LoggerUtils.error(
+          String.format("mv %s to %s failed for %s", content.getFullPath(),
+              newContent.getFullPath(), sessionModel.getConfiguration()));
+    } catch (TimeoutException e) {
+      ErrorUtils.showError(
+          PropertiesUtils.getViewProperty(
+              "scpbrowser.dialog.action.mv.error.message",
+              content.getFullPath(), newContent.getFullPath()),
+          PropertiesUtils
+              .getViewProperty("scpbrowser.dialog.action.mv.error.title"));
+      LoggerUtils.error(
+          String.format("mv %s to %s failed for %s", content.getFullPath(),
+              newContent.getFullPath(), sessionModel.getConfiguration()));
     }
   }
 

@@ -35,8 +35,7 @@ import fr.jhamon.scpbrowser.view.component.impl.table.DateCellRenderer;
 import fr.jhamon.scpbrowser.view.component.impl.table.FolderContentTable;
 
 /**
- * @author J.Hamon
- * Copyright 2019 J.Hamon
+ * @author J.Hamon Copyright 2019 J.Hamon
  *
  */
 public class SessionPanel extends JPanel implements SessionView {
@@ -80,7 +79,7 @@ public class SessionPanel extends JPanel implements SessionView {
       public void keyPressed(KeyEvent e) {
         if (KeyEvent.VK_ENTER == e.getKeyCode()) {
           SessionPanel.this.eventHandler
-          .onRequestPath(SessionPanel.this.pathField.getText());
+              .onRequestPath(SessionPanel.this.pathField.getText());
         }
       }
     });
@@ -91,7 +90,7 @@ public class SessionPanel extends JPanel implements SessionView {
       @Override
       public void actionPerformed(ActionEvent e) {
         SessionPanel.this.eventHandler
-        .onRequestPath(SessionPanel.this.pathField.getText());
+            .onRequestPath(SessionPanel.this.pathField.getText());
       }
     });
     this.homeButton = new JButton(
@@ -116,12 +115,18 @@ public class SessionPanel extends JPanel implements SessionView {
             int dialogCode = JOptionPane.showConfirmDialog(SessionPanel.this,
                 fileNameField,
                 PropertiesUtils
-                .getViewProperty("scpbrowser.dialog.newFolder.title"),
+                    .getViewProperty("scpbrowser.dialog.newFolder.title"),
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (dialogCode == JOptionPane.OK_OPTION
                 && !StringUtils.isBlank(fileNameField.getText())) {
+              final String motive = (String) JOptionPane.showInputDialog(null,
+                  PropertiesUtils.getViewProperty(
+                      "scp.browser.dialog.content.input.motive.message"),
+                  PropertiesUtils.getViewProperty(
+                      "scp.browser.dialog.content.input.motive.title"),
+                  JOptionPane.PLAIN_MESSAGE);
               SessionPanel.this.eventHandler
-              .onMakeDirEvent(fileNameField.getText());
+                  .onMakeDirEvent(fileNameField.getText(), motive);
             }
           }
         });
@@ -129,7 +134,8 @@ public class SessionPanel extends JPanel implements SessionView {
     });
 
     this.contentTable = new FolderContentTable();
-    ((JTable) this.contentTable).setDefaultRenderer(Date.class, new DateCellRenderer());
+    ((JTable) this.contentTable).setDefaultRenderer(Date.class,
+        new DateCellRenderer());
 
     this.uploadFileChooser = new JFileChooser() {
 
@@ -146,8 +152,8 @@ public class SessionPanel extends JPanel implements SessionView {
     this.uploadFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
     this.uploadFileChooser.setMultiSelectionEnabled(false);
     this.uploadFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    this.uploadFileChooser.setDialogTitle(
-        PropertiesUtils.getViewProperty("scpbrowser.dialog.filechooser.title.upload"));
+    this.uploadFileChooser.setDialogTitle(PropertiesUtils
+        .getViewProperty("scpbrowser.dialog.filechooser.title.upload"));
 
     this.downloadFileChooser = new JFileChooser() {
 
@@ -163,9 +169,10 @@ public class SessionPanel extends JPanel implements SessionView {
     };
     this.downloadFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
     this.downloadFileChooser.setMultiSelectionEnabled(false);
-    this.downloadFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-    this.downloadFileChooser.setDialogTitle(
-        PropertiesUtils.getViewProperty("scpbrowser.dialog.filechooser.title.download"));
+    this.downloadFileChooser
+        .setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    this.downloadFileChooser.setDialogTitle(PropertiesUtils
+        .getViewProperty("scpbrowser.dialog.filechooser.title.download"));
 
   }
 
@@ -233,11 +240,18 @@ public class SessionPanel extends JPanel implements SessionView {
         int returnVal = uploadFileChooser.showDialog(null, PropertiesUtils
             .getViewProperty("scpbrowser.dialog.filechooser.button.upload"));
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+          final String motive = (String) JOptionPane.showInputDialog(null,
+              PropertiesUtils.getViewProperty(
+                  "scp.browser.dialog.content.input.motive.message"),
+              PropertiesUtils.getViewProperty(
+                  "scp.browser.dialog.content.input.motive.title"),
+              JOptionPane.PLAIN_MESSAGE);
           new Thread(new Runnable() {
             @Override
             public void run() {
               eventHandler.onUploadEvent(
-                  uploadFileChooser.getSelectedFile().getAbsolutePath());
+                  uploadFileChooser.getSelectedFile().getAbsolutePath(),
+                  motive);
             }
           }).start();
         }
@@ -245,15 +259,14 @@ public class SessionPanel extends JPanel implements SessionView {
     });
   }
 
-
-
   @Override
-  public void openDownloadFileChooser(FileModel fileModel) {
+  public void openDownloadFileChooser(final FileModel fileModel) {
     SwingUtilities.invokeLater(new Runnable() {
 
       @Override
       public void run() {
-        downloadFileChooser.setSelectedFile(new File(downloadFileChooser.getCurrentDirectory(), fileModel.getName()));
+        downloadFileChooser.setSelectedFile(new File(
+            downloadFileChooser.getCurrentDirectory(), fileModel.getName()));
         int returnVal = downloadFileChooser.showSaveDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
           new Thread(new Runnable() {

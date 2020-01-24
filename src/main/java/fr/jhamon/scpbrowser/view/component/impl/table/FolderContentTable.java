@@ -27,8 +27,7 @@ import fr.jhamon.scpbrowser.view.component.event.handler.ContentEventHandler;
 /**
  * Extends the JTable to display ContentModel object and handle user actions
  *
- * @author Trichoko
- * Copyright 2019 J.Hamon
+ * @author Trichoko Copyright 2019 J.Hamon
  *
  */
 public class FolderContentTable extends JTable implements ContentViewer {
@@ -44,7 +43,8 @@ public class FolderContentTable extends JTable implements ContentViewer {
     }
     this.setShowVerticalLines(false);
 
-    TableRowSorter <FolderContentTableModel> sorter = new TableRowSorter<FolderContentTableModel>((FolderContentTableModel) this.getModel());
+    TableRowSorter<FolderContentTableModel> sorter = new TableRowSorter<FolderContentTableModel>(
+        (FolderContentTableModel) this.getModel());
     this.setRowSorter(sorter);
     sorter.setComparator(2, new Comparator<String>() {
 
@@ -68,7 +68,8 @@ public class FolderContentTable extends JTable implements ContentViewer {
         SizeExtension o2Range = SizeExtension.fromString(splitO2[1]);
 
         if (o1Range == o2Range) {
-          return Float.valueOf(splitO1[0].replace(",", ".")).compareTo(Float.valueOf(splitO2[0].replace(",", ".")));
+          return Float.valueOf(splitO1[0].replace(",", "."))
+              .compareTo(Float.valueOf(splitO2[0].replace(",", ".")));
         } else {
           return o1Range.compareTo(o2Range);
         }
@@ -85,7 +86,7 @@ public class FolderContentTable extends JTable implements ContentViewer {
       @Override
       public void run() {
         ((FolderContentTableModel) FolderContentTable.this.getModel())
-        .clearContent();
+            .clearContent();
       }
     });
 
@@ -106,7 +107,7 @@ public class FolderContentTable extends JTable implements ContentViewer {
       @Override
       public void run() {
         ((FolderContentTableModel) FolderContentTable.this.getModel())
-        .setContent(content);
+            .setContent(content);
       }
     });
 
@@ -135,8 +136,11 @@ public class FolderContentTable extends JTable implements ContentViewer {
           if (SwingUtilities.isRightMouseButton(mouseEvent)) {
             FolderContentTable.this.setRowSelectionInterval(row, row);
           }
-          if (SwingUtilities.isLeftMouseButton(mouseEvent) && mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
-            int rowModelId = FolderContentTable.this.convertRowIndexToModel(row);
+          if (SwingUtilities.isLeftMouseButton(mouseEvent)
+              && mouseEvent.getClickCount() == 2
+              && table.getSelectedRow() != -1) {
+            int rowModelId = FolderContentTable.this
+                .convertRowIndexToModel(row);
             final ContentModel content = ((FolderContentTableModel) FolderContentTable.this
                 .getModel()).getContentAt(rowModelId);
             if (content instanceof FolderModel) {
@@ -163,7 +167,8 @@ public class FolderContentTable extends JTable implements ContentViewer {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        int rowModelId = FolderContentTable.this.convertRowIndexToModel(FolderContentTable.this.getSelectedRow());
+        int rowModelId = FolderContentTable.this
+            .convertRowIndexToModel(FolderContentTable.this.getSelectedRow());
         final ContentModel content = ((FolderContentTableModel) FolderContentTable.this
             .getModel()).getContentAt(rowModelId);
         new Thread(new Runnable() {
@@ -181,7 +186,8 @@ public class FolderContentTable extends JTable implements ContentViewer {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        int rowModelId = FolderContentTable.this.convertRowIndexToModel(FolderContentTable.this.getSelectedRow());
+        int rowModelId = FolderContentTable.this
+            .convertRowIndexToModel(FolderContentTable.this.getSelectedRow());
         final ContentModel content = ((FolderContentTableModel) FolderContentTable.this
             .getModel()).getContentAt(rowModelId);
         new Thread(new Runnable() {
@@ -199,16 +205,29 @@ public class FolderContentTable extends JTable implements ContentViewer {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        int rowModelId = FolderContentTable.this.convertRowIndexToModel(FolderContentTable.this.getSelectedRow());
+        int rowModelId = FolderContentTable.this
+            .convertRowIndexToModel(FolderContentTable.this.getSelectedRow());
         final ContentModel content = ((FolderContentTableModel) FolderContentTable.this
             .getModel()).getContentAt(rowModelId);
-        String newName = JOptionPane.showInputDialog(null, PropertiesUtils.getViewProperty("scpbrowser.dialog.content.rename.message"),content.getName());
+        String newName = JOptionPane
+            .showInputDialog(null,
+                PropertiesUtils.getViewProperty(
+                    "scpbrowser.dialog.content.rename.message"),
+                content.getName());
         if (newName != null) {
-          final ContentModel newContent = new ContentModel(newName, content.getPath(), null);
+          final ContentModel newContent = new ContentModel(newName,
+              content.getPath(), null);
+          final String motive = (String) JOptionPane.showInputDialog(null,
+              PropertiesUtils.getViewProperty(
+                  "scp.browser.dialog.content.input.motive.message"),
+              PropertiesUtils.getViewProperty(
+                  "scp.browser.dialog.content.input.motive.title"),
+              JOptionPane.PLAIN_MESSAGE);
           new Thread(new Runnable() {
             @Override
             public void run() {
-              sessionPresenter.onMoveSelectedContent(content, newContent);
+              sessionPresenter.onMoveSelectedContent(content, newContent,
+                  motive);
             }
           }).start();
         }
@@ -221,19 +240,29 @@ public class FolderContentTable extends JTable implements ContentViewer {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        int rowModelId = FolderContentTable.this.convertRowIndexToModel(FolderContentTable.this.getSelectedRow());
+        int rowModelId = FolderContentTable.this
+            .convertRowIndexToModel(FolderContentTable.this.getSelectedRow());
         final ContentModel content = ((FolderContentTableModel) FolderContentTable.this
             .getModel()).getContentAt(rowModelId);
         int dialogResult = JOptionPane.showConfirmDialog(null,
-            PropertiesUtils.getViewProperty(content instanceof FolderModel ? "scpbrowser.dialog.content.remove.folder.message"
-                : "scpbrowser.dialog.content.remove.file.message", content.getName()),
+            PropertiesUtils.getViewProperty(
+                content instanceof FolderModel
+                    ? "scpbrowser.dialog.content.remove.folder.message"
+                    : "scpbrowser.dialog.content.remove.file.message",
+                content.getName()),
             "Warning", JOptionPane.YES_NO_OPTION);
 
         if (dialogResult == JOptionPane.YES_OPTION) {
+          final String motive = (String) JOptionPane.showInputDialog(null,
+              PropertiesUtils.getViewProperty(
+                  "scp.browser.dialog.content.input.motive.message"),
+              PropertiesUtils.getViewProperty(
+                  "scp.browser.dialog.content.input.motive.title"),
+              JOptionPane.PLAIN_MESSAGE);
           new Thread(new Runnable() {
             @Override
             public void run() {
-              sessionPresenter.onDeleteSelectedContent(content);
+              sessionPresenter.onDeleteSelectedContent(content, motive);
             }
           }).start();
         }
