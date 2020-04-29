@@ -477,7 +477,7 @@ public class SessionPresenter implements ContentEventHandler {
               .getViewProperty("scpbrowser.dialog.file.download.error.title"));
       LoggerUtils.error(PropertiesUtils.getViewProperty(
           "scpbrowser.dialog.file.download.error.message", file.getName()) + " "
-          + sessionModel.getConfiguration());
+          + sessionModel.getConfiguration(), e);
     }
   }
 
