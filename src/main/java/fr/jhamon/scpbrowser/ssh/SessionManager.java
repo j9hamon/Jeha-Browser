@@ -95,7 +95,7 @@ public class SessionManager {
       channel.setAgentForwarding(true);
       channel.setPty(true);
       channel.setPtyType("dumb");
-      if (StringUtils.isNotBlank(motive)) {
+      if (ConfigUtils.isMotiveRequired() && StringUtils.isNotBlank(motive)) {
         channel.setEnv(Constantes.MOTIVE_ENV_VAR, motive);
       }
       channel.setCommand(
@@ -136,7 +136,8 @@ public class SessionManager {
       channel.setAgentForwarding(true);
       channel.setPty(true);
       // channel.setPtyType("dumb");
-      if (StringUtils.isNotBlank(sessionModel.getMotive())) {
+      if (ConfigUtils.isMotiveRequired()
+          && StringUtils.isNotBlank(sessionModel.getMotive())) {
         channel.setEnv(Constantes.MOTIVE_ENV_VAR, sessionModel.getMotive());
       }
       channel.setCommand(
@@ -310,7 +311,7 @@ public class SessionManager {
       ChannelExec channel = (ChannelExec) session.openChannel("exec");
       channel.setAgentForwarding(true);
       channel.setPty(true);
-      if (StringUtils.isNotBlank(motive)) {
+      if (ConfigUtils.isMotiveRequired() && StringUtils.isNotBlank(motive)) {
         channel.setEnv(Constantes.MOTIVE_ENV_VAR, motive);
       }
       channel.setCommand(SessionUtils.buildScpUploadCommand(

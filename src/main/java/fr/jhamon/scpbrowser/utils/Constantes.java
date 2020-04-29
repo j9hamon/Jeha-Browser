@@ -42,7 +42,8 @@ public final class Constantes {
 
   public static final String DEFAULT_MOTIVE = "NO_COMMENT";
 
-  public static final String MOTIVE_ENV_VAR = null; // TODO
+  public static final String MOTIVE_ENV_VAR = ConfigUtils
+      .getConfigProperty("motiveEnvironmentVar", "MOTIVE");
 
   private Constantes() {
   }

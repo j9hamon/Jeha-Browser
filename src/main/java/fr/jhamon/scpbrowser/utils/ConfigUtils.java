@@ -53,6 +53,18 @@ public class ConfigUtils {
   }
 
   /**
+   * @param property property key to find
+   * @return the property value
+   */
+  public static String getConfigProperty(String property, String defaultVal) {
+    String val = getConfigProperty(property);
+    if (val == null) {
+      val = defaultVal;
+    }
+    return val;
+  }
+
+  /**
    * @return the list of session configurations stored in the configuration file
    */
   public static List<SessionConfigModel> getSessionConfigs() {
